@@ -2,6 +2,7 @@ package com.jung.notify.service;
 
 import com.jung.notify.dto.News;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import java.util.Locale;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class NewsService {
 
     @Value("${naver.clinetId}")
@@ -31,9 +33,9 @@ public class NewsService {
     @Value("${naver.clientSecret}")
     String clientSecret; //애플리케이션 클라이언트 시크릿값"
 
+    private final UtilService utilService;
 
     public List<News> news(String keyword) {
-
         String apiURL = "https://openapi.naver.com/v1/search/news.json?query=" + keyword + "&sort=sim";    // json 결과
         //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
 
@@ -68,7 +70,7 @@ public class NewsService {
 
             News news = News.builder()
                     .title(News.replace(object.get("title").toString()))
-                    .link(UtilService.shortUrl(object.get("link").toString()))
+                    .link(utilService.shortUrl(object.get("link").toString()))
                     .description(News.replace(object.get("description").toString()))
                     .pubDate(localDateTime.format(formatter))
                     .build();

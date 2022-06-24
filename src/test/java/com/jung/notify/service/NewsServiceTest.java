@@ -13,6 +13,10 @@ public class NewsServiceTest {
     @Autowired
     private NewsService newsService;
 
+    @Autowired
+    private UtilService utilService;
+
+
     @Test
     public void 네이버_뉴스_API(){
         System.out.println(newsService.news("삼성전자"));
@@ -20,7 +24,7 @@ public class NewsServiceTest {
 
     @Test
     public void 단축_URL(){
-        System.out.println(UtilService.shortUrl("https://n.news.naver.com/mnews/article/003/0011265263?sid=101"));
+        System.out.println(utilService.shortUrl("https://n.news.naver.com/mnews/article/003/0011265263?sid=101"));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.jung.notify.service;
 
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,12 +16,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UtilService {
 
     @Value("${naver.clinetId}")
-    static String clientId; //애플리케이션 클라이언트 아이디값"
+    String clientId; //애플리케이션 클라이언트 아이디값"
 
     @Value("${naver.clientSecret}")
-    static String clientSecret; //애플리케이션 클라이언트 시크릿값"
+    String clientSecret; //애플리케이션 클라이언트 시크릿값"
 
-    public static String shortUrl(String url){
+    public String shortUrl(String url){
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
