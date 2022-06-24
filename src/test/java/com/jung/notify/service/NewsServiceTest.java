@@ -15,7 +15,8 @@ public class NewsServiceTest {
 
     @Test
     public void 네이버_뉴스_API(){
-        newsService.news();
+        System.out.println(newsService.news("삼성전자"));
     }
+
 
 }
