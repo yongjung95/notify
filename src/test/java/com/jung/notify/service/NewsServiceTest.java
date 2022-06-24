@@ -18,5 +18,9 @@ public class NewsServiceTest {
         System.out.println(newsService.news("삼성전자"));
     }
 
+    @Test
+    public void 단축_URL(){
+        System.out.println(UtilService.shortUrl("https://n.news.naver.com/mnews/article/003/0011265263?sid=101"));
+    }
 
 }

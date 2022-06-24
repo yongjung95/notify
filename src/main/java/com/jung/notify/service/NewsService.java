@@ -68,7 +68,7 @@ public class NewsService {
 
             News news = News.builder()
                     .title(News.replace(object.get("title").toString()))
-                    .link(object.get("link").toString())
+                    .link(UtilService.shortUrl(object.get("link").toString()))
                     .description(News.replace(object.get("description").toString()))
                     .pubDate(localDateTime.format(formatter))
                     .build();
