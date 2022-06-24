@@ -1,9 +1,11 @@
 package com.jung.notify.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jung.notify.dto.News;
+
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,130 +15,70 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 @Slf4j
 public class NewsService {
 
-    public void news() {
-        String clientId = "4zRARZgqmPVnZoxCXODO"; //애플리케이션 클라이언트 아이디값"
-        String clientSecret = "oAGpI7R1KU"; //애플리케이션 클라이언트 시크릿값"
+    @Value("${naver.clinetId}")
+    String clientId; //애플리케이션 클라이언트 아이디값"
+
+    @Value("${naver.clientSecret}")
+    String clientSecret; //애플리케이션 클라이언트 시크릿값"
 
 
-        String text = null;
-        try {
-            text = URLEncoder.encode("삼성전자", "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("검색어 인코딩 실패", e);
-        }
+    public List<News> news(String keyword) {
 
-
-        String apiURL = "https://openapi.naver.com/v1/search/news.json?query=" + text + "&sort=sim";    // json 결과
+        String apiURL = "https://openapi.naver.com/v1/search/news.json?query=" + keyword + "&sort=sim";    // json 결과
         //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
 
+        RestTemplate restTemplate = new RestTemplate();
 
-        Map<String, String> requestHeaders = new HashMap<>();
-        requestHeaders.put("X-Naver-Client-Id", clientId);
-        requestHeaders.put("X-Naver-Client-Secret", clientSecret);
-        String responseBody = get(apiURL, requestHeaders);
+        HttpHeaders header = new HttpHeaders();
+        header.set("X-Naver-Client-Id", clientId);
+        header.set("X-Naver-Client-Secret", clientSecret);
 
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        String jsonInString = "";
+        HttpEntity<?> entity = new HttpEntity<>(header);
 
-        try {
-            RestTemplate restTemplate = new RestTemplate();
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(apiURL).build();
 
-            HttpHeaders header = new HttpHeaders();
-            header.set("X-Naver-Client-Id", clientId);
-            header.set("X-Naver-Client-Secret", clientSecret);
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
 
-            HttpEntity<?> entity = new HttpEntity<>(header);
+        JSONObject jsonObject = new JSONObject(resultMap.getBody());
 
-            UriComponents uri = UriComponentsBuilder.fromHttpUrl(apiURL).build();
+        JSONArray jsonArray = new JSONArray(jsonObject.getJSONArray("items").toString());
 
-            ResponseEntity<String> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+//            log.info(jsonObject.getJSONArray("items").toString());
 
-            result.put("statusCode", resultMap.getStatusCodeValue()); //http status code를 확인
-            result.put("header", resultMap.getHeaders()); //헤더 정보 확인
-            result.put("body", resultMap.getBody()); //실제 데이터 정보 확인
+        List<News> newsList = new ArrayList<>();
 
-            JSONObject jsonObject = new JSONObject(resultMap.getBody());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject object = jsonArray.getJSONObject(i);
 
-//            JSONArray jsonArray = new JSONArray(jsonObject.getJSONArray("items"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss x").withLocale(Locale.ENGLISH);
 
-            log.info(jsonObject.toString());
+            LocalDateTime localDateTime = LocalDateTime.parse(object.get("pubDate").toString(), formatter);
 
-//            for (int i = 0; i <jsonArray.length(); i++){
-//                JSONObject object = jsonArray.getJSONObject(i);
+            formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일(E) HH:mm");
 
-//                System.out.println(object.get("title"));
-//            }
+            News news = News.builder()
+                    .title(News.replace(object.get("title").toString()))
+                    .link(object.get("link").toString())
+                    .description(News.replace(object.get("description").toString()))
+                    .pubDate(localDateTime.format(formatter))
+                    .build();
 
-
-
-
-        }catch (Exception e){
-            log.error(e.toString());
+            newsList.add(news);
         }
 
-
+        return newsList;
     }
 
-    private String get(String apiUrl, Map<String, String> requestHeaders){
-        HttpURLConnection con = connect(apiUrl);
-        try {
-            con.setRequestMethod("GET");
-            for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
-                    con.setRequestProperty(header.getKey(), header.getValue());
-            }
 
 
-            int responseCode = con.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
-                return readBody(con.getInputStream());
-            } else { // 에러 발생
-                return readBody(con.getErrorStream());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("API 요청과 응답 실패", e);
-        } finally {
-            con.disconnect();
-        }
-    }
-
-    private HttpURLConnection connect(String apiUrl){
-        try {
-            URL url = new URL(apiUrl);
-            return (HttpURLConnection)url.openConnection();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
-        } catch (IOException e) {
-            throw new RuntimeException("연결이 실패했습니다. : " + apiUrl, e);
-        }
-    }
-
-    private String readBody(InputStream body){
-        InputStreamReader streamReader = new InputStreamReader(body);
-
-
-        try (BufferedReader lineReader = new BufferedReader(streamReader)) {
-            StringBuilder responseBody = new StringBuilder();
-
-            String line;
-            while ((line = lineReader.readLine()) != null) {
-                responseBody.append(line);
-            }
-
-            return responseBody.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
-        }
-    }
 }
