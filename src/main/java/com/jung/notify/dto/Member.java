@@ -20,5 +20,7 @@ public class Member {
 
     private String passwd;
 
+    private String lineToken;
+
     private LocalDateTime created;
 }
