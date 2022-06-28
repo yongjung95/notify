@@ -2,9 +2,7 @@ package com.jung.notify.dto;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,6 +17,9 @@ public class Member {
     private String id;
 
     private String passwd;
+
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
 
     private String lineToken;
 
