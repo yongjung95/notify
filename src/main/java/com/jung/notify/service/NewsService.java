@@ -1,6 +1,6 @@
 package com.jung.notify.service;
 
-import com.jung.notify.dto.News;
+import com.jung.notify.domain.News;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

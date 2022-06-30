@@ -1,6 +1,6 @@
 package com.jung.notify.repository;
 
-import com.jung.notify.dto.Member;
+import com.jung.notify.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .fieldError {
+        border-color: #bd2130;
+    }
+</style>
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <form role="form" action="/member/save" th:object="${saveMember}" method="post">
+        <div class="form-group">
+            <label th:for="id">아이디</label>
+            <input type="text" th:field="*{id}" class="form-control"
+                   placeholder="아이디를 입력하세요"  th:class="${#fields.hasErrors('id')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+            <label th:for="passwd">패스워드</label>
+            <input type="password" th:field="*{passwd}" class="form-control"
+                   placeholder="패스워드를 입력하세요" th:class="${#fields.hasErrors('passwd')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('passwd')}" th:errors="*{passwd}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+            <label th:for="lineToken">라인 토큰</label>
+            <input type="text" th:field="*{lineToken}" class="form-control" placeholder="라인토큰을 입력하세요">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+
+</body>
+</html>

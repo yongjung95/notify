@@ -1,4 +1,4 @@
-package com.jung.notify.dto;
+package com.jung.notify.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

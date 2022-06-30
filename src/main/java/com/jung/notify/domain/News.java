@@ -1,10 +1,8 @@
-package com.jung.notify.dto;
+package com.jung.notify.domain;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Getter

@@ -1,4 +1,4 @@
-package com.jung.notify.dto;
+package com.jung.notify.domain;
 
 import lombok.*;
 
@@ -6,8 +6,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Setter
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
 
     @Id
