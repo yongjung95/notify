@@ -32,21 +32,4 @@ public class MemberController {
         return "member/createMemberForm";
     }
 
-    @PostMapping(value = "/member/save")
-    public String create(@Valid MemberDto.SaveMember saveMember, BindingResult result) {
-        if (result.hasErrors()) {
-            return "member/createMemberForm";
-        }
-
-        Member member = Member.builder()
-                .id(saveMember.getId())
-                .passwd(bCryptPasswordEncoder.encode(saveMember.getPasswd()))
-                .memberRole(MemberRole.MEMBER)
-                .lineToken(saveMember.getLineToken())
-                .created(LocalDateTime.now())
-                .build();
-
-        memberService.saveMember(member);
-        return "redirect:/";
-    }
 }
