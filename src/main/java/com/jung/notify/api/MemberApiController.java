@@ -33,7 +33,7 @@ public class MemberApiController {
         List<String> list = Arrays.asList(saveMember.getId(), saveMember.getPasswd());
         if(list.stream().anyMatch(StringUtil::isNullOrEmpty)) return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
 
-        if(memberService.findMemberById(saveMember.getId()) != null){
+        if(memberService.findMemberById(saveMember.getId()).isPresent()){
             return responseService.getFailResult(ErrorCode.DUPLICATION_ID);
         }
 
