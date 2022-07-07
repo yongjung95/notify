@@ -19,6 +19,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final LoginService loginService;
 
+    private final LoginFailureHandler loginFailureHandler;
+
     // 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
     @Bean
     public BCryptPasswordEncoder encodePwd() {
@@ -36,7 +38,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login") // /login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행해준다.
-                .defaultSuccessUrl("/home", true);
+                .defaultSuccessUrl("/home", true)
+        //        .failureForwardUrl("/loginError")
+                .failureHandler(loginFailureHandler)
+        ;
     }
 
     @Override
