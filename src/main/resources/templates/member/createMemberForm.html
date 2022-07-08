@@ -43,8 +43,9 @@
             dataType: "json",
             data : saveMember,
             success : function(res){
-                if(res.code === 200){
+                if(res.code == 200){
                     alert("회원 가입 성공!!");
+                    location.href="/";
                 }else{
                     alert(res.message);
                 }
