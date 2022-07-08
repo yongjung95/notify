@@ -6,8 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.naming.AuthenticationException;
-
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
@@ -23,9 +21,7 @@ public class HomeController {
     }
 
     @PostMapping("/loginError")
-    public String loginError(Model model, AuthenticationException exception){
-
-        System.out.println("@@@@@@" + exception.getMessage());
+    public String loginError(Model model){
         model.addAttribute("error","true");
         return "login";
     }
