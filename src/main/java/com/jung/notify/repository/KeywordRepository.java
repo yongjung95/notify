@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,8 +19,19 @@ public class KeywordRepository {
         em.persist(keyword);
     }
 
-    public Keyword findOne(Long id){
-        return em.find(Keyword.class, id);
+    public Optional<Keyword> findOne(Long id, Member member){
+        List<Keyword> keywords = em.createQuery("select k from Keyword k where k.id = :id and k.member = :member", Keyword.class).setParameter("id", id).setParameter("member", member).getResultList();
+
+        return keywords.stream().findAny();
+    }
+
+    public Optional<Keyword> findOneByKeyword(String keyword, Member member){
+        List<Keyword> keywords = em.createQuery("select k from Keyword k where k.keyword = :keyword and k.member =:member", Keyword.class)
+                .setParameter("keyword", keyword)
+                .setParameter("member", member)
+                .getResultList();
+
+        return keywords.stream().findAny();
     }
 
     public List<Keyword> findAll(){

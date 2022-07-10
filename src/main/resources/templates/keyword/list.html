@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+<style>
+    li{
+        list-style:none;
+        }
+</style>
+
+<div class="container">
+
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="jumbotron">
+        <h1>Notify</h1>
+        <p class="lead">키워드 설정</p>
+        <ul id="keywordList">
+            <li th:each="keyword : ${keywords}" th:id="${keyword.id}">
+                <input name="keywordId" type="checkbox" th:value="${keyword.id}"><span th:text="${keyword.keyword}"></span>
+            </li>
+        </ul>
+
+        <input type="text" id="keyword">
+        <button onclick="addKeyword()">추가</button>
+        <button onclick="removeKeyword()">삭제</button>
+
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+
+</div> <!-- /container -->
+<script>
+    function addKeyword(){
+        const keyword = JSON.stringify({
+            keyword: document.getElementById("keyword").value
+        });
+
+        $.ajax({
+            type : "POST",
+            url : "/v1/keyword",
+            contentType : "application/json",
+            dataType: "json",
+            data : keyword,
+            success : function(res){
+                if(res.code == 200){
+
+                    $("#keywordList").append("<li id=" + res.data.id +"><input name='keywordID' type='checkbox' value=" + res.data.id + "><span>" + res.data.keyword + "</span></li>");
+
+                    console.log(res.data);
+                }else{
+                    alert(res.message);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert("통신 실패.")
+            }
+        });
+    }
+
+    function removeKeyword(){
+
+        const keywordId = [];
+        // Name이 Color인 속성 취득
+        const keywordIdList = document.getElementsByName("keywordId");
+        // 취득한 속성 만큼 루프
+        for (let i = 0; i < keywordIdList.length; i++) {
+            // 속성중에 체크 된 항목이 있을 경우
+            if (keywordIdList[i].checked == true) {
+                keywordId.push(keywordIdList[i].value);
+                $("#"+keywordIdList[i].value).remove();
+            }
+        }
+
+        console.log(JSON.stringify({
+            keywordId: keywordId
+        }));
+
+        $.ajax({
+            type : "DELETE",
+            url : "/v1/keyword",
+            contentType : "application/json",
+            dataType: "json",
+            data : JSON.stringify({
+                keywordId: keywordId
+            }),
+            success : function(res){
+                if(res.code == 200){
+
+                    console.log(res.data);
+                }else{
+                    alert(res.message);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert("통신 실패.")
+            }
+        });
+    }
+</script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+</body>
+</html>

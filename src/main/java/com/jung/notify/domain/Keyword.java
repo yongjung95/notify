@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,4 +24,6 @@ public class Keyword {
     private Member member;
 
     private String keyword;
+
+    private LocalDateTime created;
 }

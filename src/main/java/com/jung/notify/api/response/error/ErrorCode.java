@@ -11,6 +11,9 @@ public enum ErrorCode {
     // member
     DUPLICATION_ID(400,"M001","중복된 아이디 입니다."),
 
+    // keyword
+    DUPLICATION_KEYWORD(400,"K001","중복된 키워드 입니다."),
+    KEYWORD_IS_NOT_FOUND(400,"K002","해당 키워드가 없습니다."),
 
     ;
     private final String code;

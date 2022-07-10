@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +22,12 @@ public class KeywordService {
         keywordRepository.save(keyword);
     }
 
-    public Keyword findOne(Long id){
-        return keywordRepository.findOne(id);
+    public Optional<Keyword> findOne(Long id, Member member){
+        return keywordRepository.findOne(id, member);
+    }
+
+    public Optional<Keyword> findOneByKeyword(String keyword, Member member) {
+        return keywordRepository.findOneByKeyword(keyword, member);
     }
 
     public List<Keyword> findAll(){
