@@ -30,4 +30,8 @@ public class MemberRepository {
 
         return members.stream().findAny();
     }
+
+    public List<Member> findAllMember(){
+        return em.createQuery("select m from Member m", Member.class).getResultList();
+    }
 }

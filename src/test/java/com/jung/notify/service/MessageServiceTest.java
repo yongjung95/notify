@@ -29,7 +29,7 @@ public class MessageServiceTest {
         body.add("stickerPackageId","446");
         body.add("stickerId","1988");
 
-        messageService.sendMessage(body);
+//        messageService.sendMessage(body);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class MessageServiceTest {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("message", stringBuffer.toString());
 
-        messageService.sendMessage(body);
+//        messageService.sendMessage(body);
     }
 
 }
