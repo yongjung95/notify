@@ -28,7 +28,7 @@ public class KeywordSchedule {
 
     private final MessageService messageService;
 
-    @Scheduled(cron = "0 0 8 1/1 * *")
+    @Scheduled(cron = "0 15 23 1/1 * *")
     public void keywordSchedule(){
 
         List<Member> members = memberService.findAllMember();
@@ -54,6 +54,5 @@ public class KeywordSchedule {
                 }
             }
         }
-//        System.out.println("스케쥴러 테스트");
     }
 }
