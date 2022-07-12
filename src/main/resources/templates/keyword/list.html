@@ -19,6 +19,7 @@
     <div class="jumbotron">
         <h1>Notify</h1>
         <p class="lead">키워드 설정</p>
+        <p>키워드 뉴스는 매일 아침 8시에 발송됩니다.</p>
         <ul id="keywordList">
             <li th:each="keyword : ${keywords}" th:id="${keyword.id}">
                 <input name="keywordId" type="checkbox" th:value="${keyword.id}"><span th:text="${keyword.keyword}"></span>
@@ -76,10 +77,6 @@
                 $("#"+keywordIdList[i].value).remove();
             }
         }
-
-        console.log(JSON.stringify({
-            keywordId: keywordId
-        }));
 
         $.ajax({
             type : "DELETE",
