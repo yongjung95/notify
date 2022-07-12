@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     // member
     DUPLICATION_ID(400,"M001","중복된 아이디 입니다."),
+    LINE_TOKEN_IS_NOT_FOUND(400,"M002","등록된 라인 토큰이 없습니다."),
 
     // keyword
     DUPLICATION_KEYWORD(400,"K001","중복된 키워드 입니다."),

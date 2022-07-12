@@ -28,6 +28,7 @@
         <input type="text" id="keyword">
         <button onclick="addKeyword()">추가</button>
         <button onclick="removeKeyword()">삭제</button>
+        <button onclick="messageTest()">메시지 발송 테스트</button>
 
     </div>
 
@@ -92,6 +93,27 @@
                 if(res.code == 200){
 
                     console.log(res.data);
+                }else{
+                    alert(res.message);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert("통신 실패.")
+            }
+        });
+    }
+
+    function messageTest(){
+        $.ajax({
+            type : "POST",
+            url : "/v1/message",
+            contentType : "application/json",
+            dataType: "json",
+            data : JSON.stringify({
+            }),
+            success : function(res){
+                if(res.code == 200){
+                    alert('메시지 테스트 키워드는 삼성전자로 발송됩니다.')
                 }else{
                     alert(res.message);
                 }
