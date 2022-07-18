@@ -81,6 +81,51 @@ public class NewsService {
         return newsList;
     }
 
+    public List<News> dateNews(String keyword, int start) {
+        String apiURL = "https://openapi.naver.com/v1/search/news.json?query=" + keyword + "&sort=date&start=" + start;    // json 결과
+        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.set("X-Naver-Client-Id", clientId);
+        header.set("X-Naver-Client-Secret", clientSecret);
+
+        HttpEntity<?> entity = new HttpEntity<>(header);
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(apiURL).build();
+
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+
+        JSONObject jsonObject = new JSONObject(resultMap.getBody());
+
+        JSONArray jsonArray = new JSONArray(jsonObject.getJSONArray("items").toString());
+
+//            log.info(jsonObject.getJSONArray("items").toString());
+
+        List<News> newsList = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject object = jsonArray.getJSONObject(i);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss x").withLocale(Locale.ENGLISH);
+
+            LocalDateTime localDateTime = LocalDateTime.parse(object.get("pubDate").toString(), formatter);
+
+            formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일(E) HH:mm");
+
+            News news = News.builder()
+                    .title(News.replace(object.get("title").toString()))
+                    .link(utilService.shortUrl(object.get("link").toString()))
+                    .description(News.replace(object.get("description").toString()))
+                    .pubDate(localDateTime.format(formatter))
+                    .build();
+
+            newsList.add(news);
+        }
+
+        return newsList;
+    }
 
 
 }
