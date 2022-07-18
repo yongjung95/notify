@@ -2,6 +2,7 @@ package com.jung.notify.controller;
 
 import com.jung.notify.domain.Keyword;
 import com.jung.notify.domain.Member;
+import com.jung.notify.dto.KeywordDto;
 import com.jung.notify.service.KeywordService;
 import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class KeywordController {
 
         List<Keyword> keywords = keywordService.findAllByMember(member.get());
 
-        model.addAttribute("keywords", keywords);
+        model.addAttribute("keywords", keywords.stream().map(KeywordDto.SelectKeywordDto::new).collect(Collectors.toList()));
 
         return "keyword/list";
     }

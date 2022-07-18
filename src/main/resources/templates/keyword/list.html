@@ -50,10 +50,7 @@
             data : keyword,
             success : function(res){
                 if(res.code == 200){
-
-                    $("#keywordList").append("<li id=" + res.data.id +"><input name='keywordID' type='checkbox' value=" + res.data.id + "><span>" + res.data.keyword + "</span></li>");
-
-                    console.log(res.data);
+                    $("#keywordList").append("<li id=" + res.data.id +"><input name='keywordId' type='checkbox' value=" + res.data.id + "><span>" + res.data.keyword + "</span></li>");
                 }else{
                     alert(res.message);
                 }
@@ -68,13 +65,13 @@
 
         const keywordId = [];
         // Name이 Color인 속성 취득
-        const keywordIdList = document.getElementsByName("keywordId");
+        const keywordIdList = document.querySelectorAll("[name=keywordId]");
         // 취득한 속성 만큼 루프
         for (let i = 0; i < keywordIdList.length; i++) {
             // 속성중에 체크 된 항목이 있을 경우
-            if (keywordIdList[i].checked == true) {
+            if (keywordIdList[i].checked === true) {
                 keywordId.push(keywordIdList[i].value);
-                $("#"+keywordIdList[i].value).remove();
+                // $("#"+keywordIdList[i].value).remove();
             }
         }
 
@@ -88,8 +85,10 @@
             }),
             success : function(res){
                 if(res.code == 200){
-
-                    console.log(res.data);
+                    for(let i = 0; i < keywordId.length; i++){
+                        $("#"+keywordId[i]).remove();
+                    }
+                    alert('키워드가 삭제되었습니다.');
                 }else{
                     alert(res.message);
                 }

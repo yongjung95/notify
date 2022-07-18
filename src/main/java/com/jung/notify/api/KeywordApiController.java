@@ -48,7 +48,7 @@ public class KeywordApiController {
 
         keywordService.saveKeyword(keyword);
 
-        return responseService.getSingleResult(keyword);
+        return responseService.getSingleResult(new KeywordDto.SelectKeywordDto(keyword));
     }
 
     @DeleteMapping("/v1/keyword")
