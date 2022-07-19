@@ -68,4 +68,48 @@ public class TestApiController {
 
         return responseService.getSuccessResult();
     }
+
+    @GetMapping("/v1/test/keywords")
+    public SingleResult<?> keywordsTest(@AuthenticationPrincipal User user){
+        Optional<Member> member = memberService.findMemberById(user.getUsername());
+
+        if(StringUtil.isNullOrEmpty(member.get().getLineToken())){
+            return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
+        }
+
+        List<News> newsList = new ArrayList<>();
+
+        List<String> keywords = new ArrayList<>();
+
+        keywords.add("삼성전자");
+        keywords.add("애플");
+        for (String keyword : keywords) {
+            int start = 0;
+
+            while (newsList.size() < 10){
+                List<News> resultList = newsService.dateNews(keyword, start += 10);
+
+                for (News news : resultList) {
+                    if(news.getTitle().contains(keyword) && newsList.size() < 10){
+                        newsList.add(news);
+                    }
+                }
+            }
+
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("오늘의 " +"\""+ keyword +"\""  + " 뉴스 \n\n");
+
+            for (News news : newsList){
+                stringBuffer.append(newsList.indexOf(news) + 1).append(". ").append(news.getTitle()).append("\n").append(news.getLink()).append("\n").append(news.getPubDate()).append("\n\n");
+            }
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("message", stringBuffer.toString());
+
+            messageService.sendMessage(body, member.get());
+        }
+
+
+        return responseService.getSuccessResult();
+    }
 }

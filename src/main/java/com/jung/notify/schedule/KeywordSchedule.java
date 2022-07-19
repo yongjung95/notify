@@ -81,7 +81,7 @@ public class KeywordSchedule {
                     }
 
                     StringBuffer stringBuffer = new StringBuffer();
-                    stringBuffer.append("오늘의 " +"\" "+keyword.getKeyword() +" \""  + "뉴스 \n\n");
+                    stringBuffer.append("오늘의 " +"\""+keyword.getKeyword() +"\""  + " 뉴스 \n\n");
 
                     for (News news : newsList){
                         stringBuffer.append(newsList.indexOf(news) + 1).append(". ").append(news.getTitle()).append("\n").append(news.getLink()).append("\n").append(news.getPubDate()).append("\n\n");
