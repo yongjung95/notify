@@ -70,7 +70,7 @@ public class KeywordSchedule {
                     List<News> newsList = new ArrayList<>();
                     int start = 0;
 
-                    while (newsList.size() < 10){
+                    while (newsList.size() < 10 && start < 1000){
                         List<News> resultList = newsService.dateNews(keyword.getKeyword(), start += 10);
 
                         for (News news : resultList) {
