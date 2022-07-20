@@ -41,9 +41,9 @@ public class MessageApiController {
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
         }
 
-        String keyword = "삼성전자";
+        String keyword = "javascript";
 
-        List<News> newsList = newsService.news(keyword);
+        List<News> newsList = newsService.dateNews(keyword, 10);
 
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("[메시지 발송 테스트] 오늘의 " +"\" "+keyword +" \""  + "뉴스 \n\n");

@@ -77,20 +77,24 @@ public class TestApiController {
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
         }
 
-        List<News> newsList = new ArrayList<>();
 
         List<String> keywords = new ArrayList<>();
 
-        keywords.add("삼성전자");
-        keywords.add("애플");
+//        keywords.add("삼성전자");
+        keywords.add("javascript");
+
         for (String keyword : keywords) {
+            List<News> newsList = new ArrayList<>();
+
             int start = 0;
 
-            while (newsList.size() < 10){
+            while (newsList.size() < 10 && start < 1000){
+                System.out.println(start + " 번째");
                 List<News> resultList = newsService.dateNews(keyword, start += 10);
 
                 for (News news : resultList) {
                     if(news.getTitle().contains(keyword) && newsList.size() < 10){
+                        System.out.println(resultList);
                         newsList.add(news);
                     }
                 }
