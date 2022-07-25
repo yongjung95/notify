@@ -80,6 +80,16 @@ public class KeywordSchedule {
                         }
                     }
 
+                    if(newsList.size() < 10){
+                        List<News> resultList = newsService.news(keyword.getKeyword());
+
+                        for (News news : resultList) {
+                            if(news.getTitle().contains(keyword.getKeyword()) && newsList.size() < 10){
+                                newsList.add(news);
+                            }
+                        }
+                    }
+
                     StringBuffer stringBuffer = new StringBuffer();
                     stringBuffer.append("오늘의 " +"\""+keyword.getKeyword() +"\""  + " 뉴스 \n\n");
 
