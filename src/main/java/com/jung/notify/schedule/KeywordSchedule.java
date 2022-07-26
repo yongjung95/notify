@@ -84,7 +84,7 @@ public class KeywordSchedule {
                         List<News> resultList = newsService.news(keyword.getKeyword());
 
                         for (News news : resultList) {
-                            if(news.getTitle().contains(keyword.getKeyword()) && newsList.size() < 10){
+                            if(newsList.size() < 10){
                                 newsList.add(news);
                             }
                         }
