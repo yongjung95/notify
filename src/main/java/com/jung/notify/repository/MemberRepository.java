@@ -1,18 +1,28 @@
 package com.jung.notify.repository;
 
 import com.jung.notify.domain.Member;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.jung.notify.domain.QMember.member;
+
+@Transactional
 @Repository
-@RequiredArgsConstructor
 public class MemberRepository {
 
     private final EntityManager em;
+
+    private final JPAQueryFactory queryFactory;
+
+    public MemberRepository(EntityManager em) {
+        this.em = em;
+        this.queryFactory = new JPAQueryFactory(em);
+    }
 
     public Long save(Member member){
         em.persist(member);

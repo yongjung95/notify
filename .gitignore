@@ -20,6 +20,7 @@ bin/
 ### IntelliJ IDEA ###
 /src/main/resources/application-dev.properties
 /src/main/resources/application-real.properties
+/src/main/resources/application-local.properties
 
 .idea
 *.iws

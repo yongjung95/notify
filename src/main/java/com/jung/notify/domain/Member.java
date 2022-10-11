@@ -1,6 +1,7 @@
 package com.jung.notify.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,5 +26,6 @@ public class Member {
 
     private String lineToken;
 
+    @CreatedDate
     private LocalDateTime created;
 }

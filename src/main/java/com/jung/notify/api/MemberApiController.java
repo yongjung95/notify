@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +41,6 @@ public class MemberApiController {
                 .passwd(bCryptPasswordEncoder.encode(saveMember.getPasswd()))
                 .memberRole(MemberRole.MEMBER)
                 .lineToken(saveMember.getLineToken())
-                .created(LocalDateTime.now())
                 .build();
 
         memberService.saveMember(member);

@@ -1,8 +1,7 @@
 package com.jung.notify.dto;
 
+import com.jung.notify.domain.Member;
 import lombok.Data;
-
-import javax.validation.constraints.NotEmpty;
 
 public class MemberDto {
 
@@ -13,5 +12,13 @@ public class MemberDto {
         private String passwd;
 
         private String lineToken;
+
+    }
+
+    public static Member dtoChangeEntity(SaveMember saveMember) {
+        return Member.builder()
+                .id(saveMember.id)
+                .passwd(saveMember.passwd)
+                .lineToken(saveMember.lineToken).build();
     }
 }
