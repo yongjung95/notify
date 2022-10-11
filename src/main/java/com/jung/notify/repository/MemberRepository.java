@@ -35,13 +35,13 @@ public class MemberRepository {
     }
 
     public Optional<Member> findById(String id){
-        List<Member> members = em.createQuery("select m from Member m where m.id = :id", Member.class).setParameter("id", id).getResultList();
-
-
-        return members.stream().findAny();
+//        List<Member> members = em.createQuery("select m from Member m where m.id = :id", Member.class).setParameter("id", id).getResultList();
+        return Optional.ofNullable(queryFactory.select(member).from(member).where(member.id.eq(id)).fetchOne());
     }
 
     public List<Member> findAllMember(){
-        return em.createQuery("select m from Member m", Member.class).getResultList();
+//        return em.createQuery("select m from Member m", Member.class).getResultList();
+
+        return queryFactory.selectFrom(member).fetch();
     }
 }
