@@ -2,7 +2,9 @@ package com.jung.notify.service;
 
 import com.jung.notify.common.Sha256;
 import com.jung.notify.domain.Member;
+import com.jung.notify.domain.MemberRole;
 import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.MemberMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,9 @@ public class MemberServiceTest {
 
         saveMember.setId("yongjung95");
         saveMember.setPasswd(Sha256.encrypt("1234"));
-//        saveMember.setCreated(LocalDateTime.now());
+        saveMember.setMemberRole(MemberRole.MEMBER);
 
-        memberService.saveMember(MemberDto.dtoChangeEntity(saveMember));
+        memberService.saveMember(MemberMapper.INSTANCE.saveMemberToMember(saveMember));
 
         // when
         Optional<Member> member = memberService.findMemberById(saveMember.getId());

@@ -31,7 +31,9 @@ public class MemberRepository {
     }
 
     public Member findByUid(Long uid){
-        return em.find(Member.class, uid);
+//        return em.find(Member.class, uid);
+
+        return queryFactory.selectFrom(member).where(member.uid.eq(uid)).fetchOne();
     }
 
     public Optional<Member> findById(String id){

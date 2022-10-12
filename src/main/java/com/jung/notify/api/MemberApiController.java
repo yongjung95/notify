@@ -4,9 +4,9 @@ import com.jung.notify.api.response.error.ErrorCode;
 import com.jung.notify.api.response.model.SingleResult;
 import com.jung.notify.api.response.service.ResponseService;
 import com.jung.notify.common.StringUtil;
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.MemberRole;
 import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,14 +36,10 @@ public class MemberApiController {
             return responseService.getFailResult(ErrorCode.DUPLICATION_ID);
         }
 
-        Member member = Member.builder()
-                .id(saveMember.getId())
-                .passwd(bCryptPasswordEncoder.encode(saveMember.getPasswd()))
-                .memberRole(MemberRole.MEMBER)
-                .lineToken(saveMember.getLineToken())
-                .build();
+        saveMember.setPasswd(bCryptPasswordEncoder.encode(saveMember.getPasswd()));
+        saveMember.setMemberRole(MemberRole.MEMBER);
 
-        memberService.saveMember(member);
+        memberService.saveMember(MemberMapper.INSTANCE.saveMemberToMember(saveMember));
 
         return responseService.getSuccessResult();
     }

@@ -48,6 +48,11 @@ dependencies {
 
 	runtimeOnly 'com.h2database:h2'
 
+	//mapstruct 추가
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
 
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
