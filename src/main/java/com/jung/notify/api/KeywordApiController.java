@@ -6,6 +6,7 @@ import com.jung.notify.api.response.service.ResponseService;
 import com.jung.notify.domain.Keyword;
 import com.jung.notify.domain.Member;
 import com.jung.notify.dto.KeywordDto;
+import com.jung.notify.mapper.KeywordMapper;
 import com.jung.notify.service.KeywordService;
 import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,16 @@ public class KeywordApiController {
     private final ResponseService responseService;
 
     @PostMapping("/v1/keyword")
-    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody KeywordDto.SaveKeywordDto saveKeywordDto){
+    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody KeywordDto.SaveKeywordDto saveKeywordDto) {
         Optional<Member> member = memberService.findMemberById(user.getUsername());
 
-        Optional<Keyword> findKeyword = keywordService.findOneByKeyword(saveKeywordDto.getKeyword(), member.get());
+        if (!member.isPresent()) {
+            return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
+        }
 
-        if(findKeyword.isPresent()){
+            Optional<Keyword> findKeyword = keywordService.findOneByKeyword(saveKeywordDto.getKeyword(), member.orElse(null));
+
+        if (findKeyword.isPresent()) {
             return responseService.getFailResult(ErrorCode.DUPLICATION_KEYWORD);
         }
 
@@ -48,27 +53,27 @@ public class KeywordApiController {
 
         keywordService.saveKeyword(keyword);
 
-        return responseService.getSingleResult(new KeywordDto.SelectKeywordDto(keyword));
+        return responseService.getSingleResult(KeywordMapper.INSTANCE.keywordToSelectKeyword(keyword));
     }
 
     @DeleteMapping("/v1/keyword")
-    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody KeywordDto.RemoveKeywordDto removeKeywordDto){
+    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody KeywordDto.RemoveKeywordDto removeKeywordDto) {
         Optional<Member> member = memberService.findMemberById(user.getUsername());
 
         List<Keyword> deleteKeywords = new ArrayList<>();
 
-        for(Long keywordId : removeKeywordDto.getKeywordId()){
-            Optional<Keyword> keyword = keywordService.findOne(keywordId, member.get());
+        for (Long keywordId : removeKeywordDto.getKeywordId()) {
+            Optional<Keyword> keyword = keywordService.findOne(keywordId, member.orElse(null));
 
-            if(!keyword.isPresent()){
+            if (!keyword.isPresent()) {
                 return responseService.getFailResult(ErrorCode.KEYWORD_IS_NOT_FOUND);
             }
 
             deleteKeywords.add(keyword.get());
         }
 
-        if(!deleteKeywords.isEmpty()){
-            for(Keyword keyword : deleteKeywords){
+        if (!deleteKeywords.isEmpty()) {
+            for (Keyword keyword : deleteKeywords) {
                 keywordService.delete(keyword);
             }
         }

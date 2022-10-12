@@ -4,6 +4,7 @@ import com.jung.notify.common.Sha256;
 import com.jung.notify.domain.Keyword;
 import com.jung.notify.domain.Member;
 import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.KeywordMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,12 @@ public class KeywordServiceTest {
         // when
         keywordService.saveKeyword(keyword);
 
+        Keyword findKeyword = keywordService.findOne(keyword.getId(), member.get()).get();
+
+        System.out.println(KeywordMapper.INSTANCE.keywordToSelectKeyword(findKeyword));
+
         // then
-        assertEquals(keyword.getKeyword(), keywordService.findOne(keyword.getId(), member.get()).get().getKeyword());
+        assertEquals(keyword.getKeyword(), KeywordMapper.INSTANCE.keywordToSelectKeyword(findKeyword).getKeyword());
 
     }
 }

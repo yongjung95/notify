@@ -1,6 +1,5 @@
 package com.jung.notify.dto;
 
-import com.jung.notify.domain.Keyword;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -19,13 +18,9 @@ public class KeywordDto {
     }
 
     @Data
-    public static class SelectKeywordDto{
+    public static class SelectKeyword{
         private Long id;
         private String keyword;
-
-        public SelectKeywordDto(Keyword keyword){
-            this.id = keyword.getId();
-            this.keyword = keyword.getKeyword();
-        }
+        private String memberId;
     }
 }
