@@ -2,6 +2,7 @@ package com.jung.notify.repository;
 
 import com.jung.notify.domain.Keyword;
 import com.jung.notify.domain.Member;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -65,8 +66,12 @@ public class KeywordRepository {
                 .select(keyword1)
                 .from(keyword1)
                 .leftJoin(keyword1.member, member)
-                .where(member.eq(searchMember))
+                .where(eqSearchMember(searchMember))
                 .fetch();
+    }
+
+    public BooleanExpression eqSearchMember(Member searchMember) {
+        return searchMember == null ? null : member.eq(searchMember);
     }
 
     public void delete(Keyword keyword){

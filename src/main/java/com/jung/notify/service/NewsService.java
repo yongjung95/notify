@@ -1,7 +1,6 @@
 package com.jung.notify.service;
 
 import com.jung.notify.domain.News;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.unbescape.html.HtmlEscape;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -69,9 +69,9 @@ public class NewsService {
             formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일(E) HH:mm");
 
             News news = News.builder()
-                    .title(News.replace(object.get("title").toString()))
+                    .title(HtmlEscape.unescapeHtml(News.replace(object.get("title").toString())))
                     .link(utilService.shortUrl(object.get("link").toString()))
-                    .description(News.replace(object.get("description").toString()))
+                    .description(HtmlEscape.unescapeHtml(News.replace(object.get("description").toString())))
                     .pubDate(localDateTime.format(formatter))
                     .build();
 
@@ -115,9 +115,9 @@ public class NewsService {
             formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일(E) HH:mm");
 
             News news = News.builder()
-                    .title(News.replace(object.get("title").toString()))
+                    .title(HtmlEscape.unescapeHtml(News.replace(object.get("title").toString())))
                     .link(utilService.shortUrl(object.get("link").toString()))
-                    .description(News.replace(object.get("description").toString()))
+                    .description(HtmlEscape.unescapeHtml(News.replace(object.get("description").toString())))
                     .pubDate(localDateTime.format(formatter))
                     .build();
 
