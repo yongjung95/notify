@@ -29,7 +29,7 @@ public class MemberServiceTest {
         // given
         MemberDto.SaveMember saveMember = new MemberDto.SaveMember();
 
-        saveMember.setId("yongjung95");
+        saveMember.setId("wlswjd95");
         saveMember.setPasswd(Sha256.encrypt("1234"));
         saveMember.setMemberRole(MemberRole.MEMBER);
 
@@ -46,13 +46,13 @@ public class MemberServiceTest {
         // given
         MemberDto.SaveMember saveMember = new MemberDto.SaveMember();
 
-        saveMember.setId("yongjung95");
+        saveMember.setId("wlswjd95");
         saveMember.setPasswd(Sha256.encrypt("1234"));
 
         Long uid = memberService.saveMember(MemberDto.dtoChangeEntity(saveMember));
 
         // when
-        Member findMember = memberService.findMemberByUid(1L);
+        Member findMember = memberService.findMemberById("wlswjd95").get();
 
         // then
         assertEquals(uid, findMember.getUid());

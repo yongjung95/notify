@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class KeywordServiceTest {
 
     @Autowired
@@ -30,7 +32,7 @@ public class KeywordServiceTest {
         // given
         MemberDto.SaveMember saveMember = new MemberDto.SaveMember();
 
-        saveMember.setId("yongjung95");
+        saveMember.setId("wlswjd95");
         saveMember.setPasswd(Sha256.encrypt("1234"));
 //        saveMember.setCreated(LocalDateTime.now());
 
