@@ -53,8 +53,8 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: |
-          aws s3 cp \
-          --region ap-northeast-2 \
-          --acl private \ 
-	  ./notify.zip s3://githubactionsnotify/
+      run:
+        aws s3 cp \
+        --region ap-northeast-2 \
+        --acl private \ 
+	./notify.zip s3://githubactionsnotify/
