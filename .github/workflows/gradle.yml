@@ -55,3 +55,10 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run:
         aws s3 cp --region ap-northeast-2 --acl private ./notify.zip s3://githubactionsnotify/
+
+    # Deploy
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: aws deploy create-deployment --application-name notify --deployment-group-name notify-deploy-group --file-exists-behavior OVERWRITE --s3-location bucket=githubactionsnotify,bundleType=zip,key=notify.zip --region ap-northeast-2
