@@ -33,6 +33,8 @@ jobs:
       with:
         java-version: 1.8
 
+    - name: Make gradlew executable
+      run: chmod +x /home/ubuntu/actions-runner/_work/notify/notify/gradlew
 
     - name: Build with Gradle
       run: /home/ubuntu/actions-runner/_work/notify/notify/gradlew clean build -x check
