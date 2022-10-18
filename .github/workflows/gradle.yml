@@ -22,8 +22,8 @@ jobs:
     runs-on: [self-hosted, notify]
 
     steps:
-    - name: chown notify
-      run: "sudo chown -Rf notify: /home/ubuntu/actions-runner/_work/notify"
+#    - name: chown notify
+#      run: "sudo chown -Rf notify: /home/ubuntu/actions-runner/_work/notify"
 
     # Task의 sequence를 명시한다.
     - uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
 
 
     - name: Build with Gradle
-      run: ./gradlew clean build -x check
+      run: /home/ubuntu/actions-runner/_work/notify/notify/gradlew clean build -x check
     
 #    - name: Grant execute permission for gradlew
 #      run: chmod +x gradlew
