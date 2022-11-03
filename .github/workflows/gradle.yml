@@ -21,10 +21,6 @@ jobs:
     # 실행 환경 지정
     runs-on: [self-hosted, notify]
 
-    steps:
-#    - name: chown notify
-#      run: "sudo chown -Rf notify: /home/ubuntu/actions-runner/_work/notify"
-
     # Task의 sequence를 명시한다.
     - uses: actions/checkout@v2
     
@@ -36,6 +32,9 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x /home/ubuntu/actions-runner/_work/notify/notify/gradlew
 
+    - name: Properties File Copy
+      run: cp /home/ubuntu/notify/application-real.properties /home/ubuntu/actions-runner/_work/notify/notify/src/main/resources/application-real.properties
+
     - name: Build with Gradle
       run: /home/ubuntu/actions-runner/_work/notify/notify/gradlew clean build -x check
 
@@ -46,4 +45,4 @@ jobs:
       run: mv /home/ubuntu/actions-runner/_work/notify/notify/build/libs/notify-0.0.1-SNAPSHOT.jar /home/ubuntu/notify/notify-0.0.1-master.jar
 
     - name: run
-      run: cd /home/ubuntu/notify/master && ./notify.sh
+      run: cd /home/ubuntu/notify && ./notify.sh
