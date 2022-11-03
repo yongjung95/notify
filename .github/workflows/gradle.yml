@@ -39,8 +39,8 @@ jobs:
     - name: Build with Gradle
       run: /home/ubuntu/actions-runner/_work/notify/notify/gradlew clean build -x check
 
-    - name: backup
-      run: mv /home/ubuntu/notify/notify-0.0.1-master.jar /home/ubuntu/notify/bak/notify-0.0.1-SNAPSHOT.jar_$(date '+%Y%m%d-%H%M%S')
+#    - name: backup
+#      run: mv /home/ubuntu/notify/notify-0.0.1-master.jar /home/ubuntu/notify/bak/notify-0.0.1-SNAPSHOT.jar_$(date '+%Y%m%d-%H%M%S')
 
     - name: deploy
       run: mv /actions-runner/_work/notify/notify/build/libs/notify-0.0.1-SNAPSHOT.jar /home/ubuntu/notify/notify-0.0.1-master.jar
