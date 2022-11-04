@@ -1,6 +1,5 @@
 package com.jung.notify.service;
 
-import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class UtilService {
 
-    @Value("${naver.clinetId}")
+    @Value("${naver.clientId}")
     String clientId; //애플리케이션 클라이언트 아이디값"
 
     @Value("${naver.clientSecret}")

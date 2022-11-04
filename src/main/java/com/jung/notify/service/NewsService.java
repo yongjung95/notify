@@ -27,7 +27,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class NewsService {
 
-    @Value("${naver.clinetId}")
+    @Value("${naver.clientId}")
     String clientId; //애플리케이션 클라이언트 아이디값"
 
     @Value("${naver.clientSecret}")
