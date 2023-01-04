@@ -19,7 +19,7 @@ permissions:
 jobs:
   build:
     # 실행 환경 지정
-    runs-on: [self-hosted, notify]
+    runs-on: [self-hosted]
 
     steps:
     # Task의 sequence를 명시한다.
