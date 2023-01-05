@@ -11,4 +11,11 @@ public class StockDto {
         private String corpName;
         private String stockCode;
     }
+
+    @Data
+    public static class SelectStockRequest {
+        private String corpName;
+        private int page = 0;
+        private int size = 10;
+    }
 }
