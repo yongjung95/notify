@@ -40,7 +40,7 @@ public class KeywordApiController {
             return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
         }
 
-            Optional<Keyword> findKeyword = keywordService.findOneByKeyword(saveKeywordDto.getKeyword(), member.orElse(null));
+        Optional<Keyword> findKeyword = keywordService.findOneByKeyword(saveKeywordDto.getKeyword(), member.orElse(null));
 
         if (findKeyword.isPresent()) {
             return responseService.getFailResult(ErrorCode.DUPLICATION_KEYWORD);

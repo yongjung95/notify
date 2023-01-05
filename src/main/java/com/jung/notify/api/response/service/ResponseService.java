@@ -3,7 +3,9 @@ package com.jung.notify.api.response.service;
 import com.jung.notify.api.response.error.ErrorCode;
 import com.jung.notify.api.response.model.CommonResult;
 import com.jung.notify.api.response.model.ListResult;
+import com.jung.notify.api.response.model.PagingListResult;
 import com.jung.notify.api.response.model.SingleResult;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -83,6 +85,27 @@ public class ResponseService {
         result.setCode(errorCode.getCode());
         result.setMessage(errorCode.getMessage());
 //        result.setMsg(msg);
+        return result;
+    }
+
+    // 페이징 성공 처리
+    public <T> PagingListResult<T> getPagingListResult(List<?> list ,Page<T> page) {
+        PagingListResult<T> result = new PagingListResult<>();
+        result.setData(list);
+        result.setPageNumber(page.getNumber());
+        result.setFirst(page.isFirst());
+        result.setHasNext(page.hasNext());
+        result.setTotalPageNumber(page.getTotalPages());
+        setSuccessResult(result);
+        return result;
+    }
+
+    // 페이징 실패 처리
+    public <T> PagingListResult<T> getFailPagingListResult(ErrorCode errorCode) {
+        PagingListResult<T> result = new PagingListResult<>();
+        result.setStatus(errorCode.getStatus());
+        result.setCode(errorCode.getCode());
+        result.setMessage(errorCode.getMessage());
         return result;
     }
 }
