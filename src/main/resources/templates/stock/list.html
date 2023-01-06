@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+<style>
+    li{
+        list-style:none;
+        }
+</style>
+
+<div class="container">
+
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="jumbotron">
+        <h1>Notify</h1>
+        <p class="lead">주식 정보 설정</p>
+        <p>주식 정보는 매일 아침 9시와 오후 3시 30분에 발송됩니다.</p>
+
+        <div class="form-group mb-3" >
+            <form th:object="${selectStockRequest}">
+                <input type="text" th:field="*{corpName}"/>
+                <button>검색</button>
+            </form>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">종목 명</th>
+                    <th scope="col">추가</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item, itemStat : ${data.getData().getContent()}">
+                    <td th:text="${data.getData().getPageable().getPageNumber() * 10 + itemStat.index + 1}"></td>
+                    <td th:text="${item.corpName}"></td>
+                    <td><button class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;">관심종목 추가</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example"
+             th:with="start=${(data.getData().getPageable().getPageNumber() / 10) * 10 + 1},
+                  end=(${(data.getData().getTotalPages() == 0) ? 1 : (start + (10 - 1) < data.getData().getTotalPages() ? start + (10 - 1) : data.getData().getTotalPages())})">
+            <ul class="pagination justify-content-center">
+                <li th:attr="class=${data.getData().getPageable().getPageNumber() < 10 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{/stock(page = ${start - 10})}">Previous</a>
+                </li>
+                <li th:each="page, status : ${#numbers.sequence(start, end)}" th:attr="class=${data.getData().getPageable().getPageNumber() == page -1 ? 'page-item active' :'page-item'}">
+                    <a class="page-link" th:href="@{/stock(page = ${page - 1}, corpName = ${selectStockRequest.getCorpName()})} " th:text="${page}"></a>
+                </li>
+                <li th:attr="class=${end < data.getData().getTotalPages() ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{/stock(page = ${start + 10})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+
+</div> <!-- /container -->
+<script>
+    /*function addKeyword(){
+        const keyword = JSON.stringify({
+            keyword: document.getElementById("keyword").value
+        });
+
+        $.ajax({
+            type : "POST",
+            url : "/v1/keyword",
+            contentType : "application/json",
+            dataType: "json",
+            data : keyword,
+            success : function(res){
+                if(res.code == 200){
+                    $("#keywordList").append("<li id=" + res.data.id +"><input name='keywordId' type='checkbox' value=" + res.data.id + "><span>" + res.data.keyword + "</span></li>");
+                }else{
+                    alert(res.message);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert("통신 실패.")
+            }
+        });
+    }
+
+    function removeKeyword(){
+
+        const keywordId = [];
+        // Name이 Color인 속성 취득
+        const keywordIdList = document.querySelectorAll("[name=keywordId]");
+        // 취득한 속성 만큼 루프
+        for (let i = 0; i < keywordIdList.length; i++) {
+            // 속성중에 체크 된 항목이 있을 경우
+            if (keywordIdList[i].checked === true) {
+                keywordId.push(keywordIdList[i].value);
+                // $("#"+keywordIdList[i].value).remove();
+            }
+        }
+
+        $.ajax({
+            type : "DELETE",
+            url : "/v1/keyword",
+            contentType : "application/json",
+            dataType: "json",
+            data : JSON.stringify({
+                keywordId: keywordId
+            }),
+            success : function(res){
+                if(res.code == 200){
+                    for(let i = 0; i < keywordId.length; i++){
+                        $("#"+keywordId[i]).remove();
+                    }
+                    alert('키워드가 삭제되었습니다.');
+                }else{
+                    alert(res.message);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert("통신 실패.")
+            }
+        });
+    }
+
+    function messageTest(){
+        $.ajax({
+            type : "POST",
+            url : "/v1/message",
+            contentType : "application/json",
+            dataType: "json",
+            data : JSON.stringify({
+            }),
+            success : function(res){
+                if(res.code == 200){
+                    alert('메시지 테스트 키워드는 삼성전자로 발송됩니다.')
+                }else{
+                    alert(res.message);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert("통신 실패.")
+            }
+        });
+    }*/
+</script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+</body>
+</html>

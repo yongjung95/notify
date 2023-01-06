@@ -89,13 +89,9 @@ public class ResponseService {
     }
 
     // 페이징 성공 처리
-    public <T> PagingListResult<T> getPagingListResult(List<?> list ,Page<T> page) {
+    public <T> PagingListResult<T> getPagingListResult(Page<T> page) {
         PagingListResult<T> result = new PagingListResult<>();
-        result.setData(list);
-        result.setPageNumber(page.getNumber());
-        result.setFirst(page.isFirst());
-        result.setHasNext(page.hasNext());
-        result.setTotalPageNumber(page.getTotalPages());
+        result.setData(page);
         setSuccessResult(result);
         return result;
     }

@@ -28,7 +28,6 @@ class StockServiceTest {
     @Test
     public void stock_리턴_값_테스트() throws JsonProcessingException {
         StockDto.SelectStockRequest selectStockRequest = new StockDto.SelectStockRequest();
-        selectStockRequest.setCorpName("삼성");
 
         PageRequest pageRequest = PageRequest.of(selectStockRequest.getPage(), selectStockRequest.getSize());
 
