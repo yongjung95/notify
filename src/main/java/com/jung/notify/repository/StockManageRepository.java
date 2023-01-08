@@ -1,7 +1,6 @@
 package com.jung.notify.repository;
 
 import com.jung.notify.domain.Member;
-import com.jung.notify.domain.QStockManage;
 import com.jung.notify.domain.StockManage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -29,7 +28,6 @@ public class StockManageRepository {
     }
 
     public List<StockManage> findAllByMember(Member searchMember) {
-        QStockManage qStockManage1;
         return queryFactory
                 .select(stockManage)
                 .from(stockManage)
