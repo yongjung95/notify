@@ -36,7 +36,7 @@ class StockServiceTest {
         List<StockDto.SelectStock> list = StockMapper.INSTANCE.stocksToSelectStocks(stocks.getContent());
 
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(responseService.getPagingListResult(list, stocks));
+        String json = mapper.writeValueAsString(responseService.getPagingListResult(stocks));
         System.out.println(json);
     }
 }
