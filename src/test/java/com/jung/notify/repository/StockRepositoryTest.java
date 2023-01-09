@@ -27,9 +27,6 @@ class StockRepositoryTest {
     private StockRepository stockRepository;
 
     @Autowired
-    private StockRepositoryQuerydsl stockRepositoryQuerydsl;
-
-    @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
@@ -40,13 +37,6 @@ class StockRepositoryTest {
         long count = stockRepository.count();
 
         System.out.println(count);
-    }
-
-    @Test
-    public void 종목명으로_검색하기() {
-        List<Stock> stockList = stockRepository.findByCorpNameContains("삼성");
-
-        System.out.println(stockList.size());
     }
 
     @Test
@@ -139,7 +129,7 @@ class StockRepositoryTest {
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
 
-        Page<StockDto.SelectStock> stockList = stockRepositoryQuerydsl.selectStockList("삼성", pageRequest, member);
+        Page<StockDto.SelectStock> stockList = stockRepository.selectStockList("삼성", pageRequest, member);
 
         System.out.println(stockList.getTotalElements());
 

@@ -11,9 +11,7 @@ public class StockDto {
         private String corpCode;
         private String corpName;
         private String stockCode;
-
         private Long stockManageId;
-
         private boolean isUse;
 
         @QueryProjection
