@@ -23,8 +23,19 @@ public class StockManageRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public void save(StockManage stockManage) {
-        em.persist(stockManage);
+    public void save(StockManage saveStockManage) {
+        StockManage findStockManage = queryFactory.select(stockManage)
+                .from(stockManage)
+                .where(stockManage.stock.eq(saveStockManage.getStock())
+                        .and(stockManage.member.eq(saveStockManage.getMember())))
+                .fetchOne();
+
+        if (findStockManage == null) {
+            em.persist(saveStockManage);
+        }else{
+            findStockManage.changeIsUse(saveStockManage.isUse());
+        }
+
     }
 
     public List<StockManage> findAllByMember(Member searchMember) {
