@@ -8,14 +8,12 @@ import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
 import com.jung.notify.dto.StockDto;
 import com.jung.notify.mapper.StockMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -23,7 +21,6 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
 class StockServiceTest {
 
     @Autowired
@@ -64,7 +61,7 @@ class StockServiceTest {
     }
 
 
-    @BeforeEach
+//    @BeforeEach
     public void before() {
         Member member1 = Member.builder().id("member1").build();
         Member member2 = Member.builder().id("member2").build();
@@ -133,6 +130,18 @@ class StockServiceTest {
         Page<StockDto.SelectStock> stockList = stockService.selectStockList("삼성", pageRequest, "member1");
 
         System.out.println(stockList.getTotalElements());
+
+        for (StockDto.SelectStock selectStock : stockList) {
+            System.out.println(selectStock);
+        }
+
+    }
+
+    @Test
+    public void 개발DB_종목_목록_조회() {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
+
+        Page<StockDto.SelectStock> stockList = stockService.selectStockList("삼성", pageRequest, "yongjung95");
 
         for (StockDto.SelectStock selectStock : stockList) {
             System.out.println(selectStock);
