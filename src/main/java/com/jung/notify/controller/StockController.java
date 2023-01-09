@@ -1,7 +1,6 @@
 package com.jung.notify.controller;
 
 import com.jung.notify.api.response.service.ResponseService;
-import com.jung.notify.domain.Stock;
 import com.jung.notify.dto.StockDto;
 import com.jung.notify.service.StockService;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +25,12 @@ public class StockController {
     public String stock(@AuthenticationPrincipal User user, Model model, StockDto.SelectStockRequest selectStockRequest) {
         PageRequest pageRequest = PageRequest.of(selectStockRequest.getPage(), selectStockRequest.getSize(), Sort.by(Sort.Direction.ASC, "corpName"));
 
-        Page<Stock> stocks = stockService.selectStockList(selectStockRequest.getCorpName(), pageRequest);
+        Page<StockDto.SelectStock> stockList = stockService.selectStockList(selectStockRequest.getCorpName(), pageRequest, user.getUsername());
 
-        model.addAttribute("data", responseService.getPagingListResult(stocks));
+        model.addAttribute("data", responseService.getPagingListResult(stockList));
         model.addAttribute("selectStockRequest", selectStockRequest);
+
+        System.out.println(stockList.getContent());
 
         return "stock/list";
     }

@@ -31,4 +31,9 @@ public class StockDto {
         private int page = 0;
         private int size = 10;
     }
+
+    @Data
+    public static class StockManageRequest {
+        private Long stockId;
+    }
 }

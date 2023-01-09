@@ -31,9 +31,10 @@ public class StockManageRepository {
                 .fetchOne();
 
         if (findStockManage == null) {
+            saveStockManage.changeIsUse();
             em.persist(saveStockManage);
         }else{
-            findStockManage.changeIsUse(saveStockManage.isUse());
+            findStockManage.changeIsUse();
         }
 
     }

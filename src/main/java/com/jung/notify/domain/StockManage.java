@@ -35,7 +35,7 @@ public class StockManage {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
-    public void changeIsUse(boolean isUse) {
-        this.isUse = isUse;
+    public void changeIsUse() {
+        this.isUse = !this.isUse;
     }
 }
