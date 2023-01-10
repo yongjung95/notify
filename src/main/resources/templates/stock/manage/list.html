@@ -73,11 +73,7 @@
                 if (res.code == 200) {
                     if (isUse) {
                         var elem = document.getElementById(stockId);
-                        $("#" + stockId).attr('class', 'btn btn-outline-primary btn-sm');
-                        $("#" + stockId).text('관심종목 추가');
-                    } else {
-                        $("#" + stockId).attr('class', 'btn btn-outline-danger btn-sm');
-                        $("#" + stockId).text('관심종목 제거');
+                        location.reload();
                     }
                 } else {
                     alert(res.message);
