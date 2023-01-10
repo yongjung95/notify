@@ -2,13 +2,18 @@ package com.jung.notify.repository;
 
 import com.jung.notify.domain.Member;
 import com.jung.notify.domain.StockManage;
+import com.jung.notify.dto.QStockDto_SelectStock;
+import com.jung.notify.dto.StockDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.jung.notify.domain.QMember.member;
+import static com.jung.notify.domain.QStock.stock;
 import static com.jung.notify.domain.QStockManage.stockManage;
 
 @Repository
@@ -39,13 +44,32 @@ public class StockManageRepository {
 
     }
 
-    public List<StockManage> findAllByMember(Member searchMember) {
-        return queryFactory
-                .select(stockManage)
+    public Page<StockDto.SelectStock> selectStockManageList(Pageable pageable, Member searchMember) {
+        List<StockDto.SelectStock> results = queryFactory
+                .select(new QStockDto_SelectStock(
+                        stock.id,
+                        stock.corpCode,
+                        stock.corpName,
+                        stock.stockCode,
+                        stockManage.id,
+                        stockManage.isUse
+                ))
                 .from(stockManage)
-                .leftJoin(stockManage.member, member)
-                .where(stockManage.member.eq(searchMember))
+                .leftJoin(stockManage.stock, stock)
+                .where(stockManage.member.eq(searchMember)
+                        .and(stockManage.isUse.eq(true)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        Long StockManageListCount = queryFactory
+                .select(stockManage.count())
+                .from(stockManage)
+                .where(stockManage.member.eq(searchMember)
+                        .and(stockManage.isUse.eq(true)))
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, StockManageListCount);
 
     }
 

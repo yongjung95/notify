@@ -41,4 +41,10 @@ public class StockService {
 
         stockManageRepository.save(stockManage);
     }
+
+    public Page<StockDto.SelectStock> selectStockManageList(Pageable pageable, String memberId) {
+        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+
+        return stockManageRepository.selectStockManageList(pageable, member);
+    }
 }

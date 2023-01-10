@@ -1,0 +1,14 @@
+<tr th:each="item, itemStat : ${data.getData().getContent()}">
+    <td th:text="${data.getData().getPageable().getPageNumber() * 10 + itemStat.index + 1}"></td>
+    <td th:text="${item.corpName}"></td>
+    <td>
+        <button th:if="${item.isUse}" th:id="${item.id}" th:value="${item.isUse}"
+                class="btn btn-outline-danger btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;"
+                th:onclick="stockManage(this.getAttribute('id'), this.getAttribute('value'))">관심종목 제거
+        </button>
+        <button th:if="${!item.isUse}" th:id="${item.id}" th:value="${item.isUse}"
+                class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;"
+                th:onclick="stockManage(this.getAttribute('id'), '')">관심종목 추가
+        </button>
+    </td>
+</tr>

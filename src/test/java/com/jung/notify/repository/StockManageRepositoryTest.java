@@ -3,16 +3,19 @@ package com.jung.notify.repository;
 import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
+import com.jung.notify.dto.StockDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest
@@ -72,11 +75,12 @@ class StockManageRepositoryTest {
                 .build();
 
         stockManageRepository.save(stockManage);
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
 
-        List<StockManage> allByMember = stockManageRepository.findAllByMember(member);
+        Page<StockDto.SelectStock> allByMember = stockManageRepository.selectStockManageList(pageRequest, member);
 
-        for (StockManage manage : allByMember) {
-            System.out.println(manage);
+        for (StockDto.SelectStock selectStock : allByMember) {
+            System.out.println(selectStock);
         }
 
     }

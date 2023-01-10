@@ -30,9 +30,27 @@ public class StockController {
         model.addAttribute("data", responseService.getPagingListResult(stockList));
         model.addAttribute("selectStockRequest", selectStockRequest);
 
-        System.out.println(stockList.getContent());
-
         return "stock/list";
+    }
+
+    @GetMapping("/stock/manage")
+    public String stockManage(@AuthenticationPrincipal User user, Model model) {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "corpName"));
+
+        model.addAttribute("data", responseService.getPagingListResult(stockService.selectStockManageList(pageRequest, user.getUsername())));
+        model.addAttribute("pageRequest", pageRequest);
+
+        return "stock/manage/list";
+    }
+
+    @GetMapping("/stock/manage/list")
+    public String stockManageList(@AuthenticationPrincipal User user, Model model, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "corpName"));
+
+        model.addAttribute("data", responseService.getPagingListResult(stockService.selectStockManageList(pageRequest, user.getUsername())));
+        model.addAttribute("pageRequest", pageRequest);
+
+        return "stock/manage/tableList";
     }
 }
 

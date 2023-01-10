@@ -1,13 +1,10 @@
 package com.jung.notify.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jung.notify.api.response.service.ResponseService;
 import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
 import com.jung.notify.dto.StockDto;
-import com.jung.notify.mapper.StockMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -31,21 +27,6 @@ class StockServiceTest {
 
     @Autowired
     private EntityManager em;
-
-    @Test
-    public void stock_리턴_값_테스트() throws JsonProcessingException {
-        StockDto.SelectStockRequest selectStockRequest = new StockDto.SelectStockRequest();
-
-        PageRequest pageRequest = PageRequest.of(selectStockRequest.getPage(), selectStockRequest.getSize());
-
-        Page<Stock> stocks = stockService.selectStockList(selectStockRequest.getCorpName(), pageRequest);
-
-        List<StockDto.SelectStock> list = StockMapper.INSTANCE.stocksToSelectStocks(stocks.getContent());
-
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(responseService.getPagingListResult(stocks));
-        System.out.println(json);
-    }
 
     @Test
     public void stock_목록_조회_및_회원_관심종목_조회() {
@@ -123,7 +104,7 @@ class StockServiceTest {
 
     @Test
     public void 관심종목_등록_수정() {
-        stockService.saveStockManage(9L, 5L, "member1", false);
+        stockService.saveStockManage(9L, "member1");
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
 
@@ -142,6 +123,18 @@ class StockServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
 
         Page<StockDto.SelectStock> stockList = stockService.selectStockList("삼성", pageRequest, "yongjung95");
+
+        for (StockDto.SelectStock selectStock : stockList) {
+            System.out.println(selectStock);
+        }
+
+    }
+
+    @Test
+    public void 개발DB_관심목록_조회() {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
+
+        Page<StockDto.SelectStock> stockList = stockService.selectStockManageList( pageRequest, "yongjung95");
 
         for (StockDto.SelectStock selectStock : stockList) {
             System.out.println(selectStock);
