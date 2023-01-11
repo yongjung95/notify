@@ -16,7 +16,7 @@ public class StockSchedule {
         stockService.sendMorningStockPriceList(true);
     }
 
-    @Scheduled(cron = "0 40 15 1/1 * *")
+    @Scheduled(cron = "0 55 15 1/1 * *")
     public void eveningScheduleV1() {
         stockService.sendMorningStockPriceList(false);
     }
