@@ -57,7 +57,7 @@ public class KeywordSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 8 1/1 * *")
+    @Scheduled(cron = "0 0 8 1/1 * *", zone = "GMT+9:00")
     public void keywordScheduleV2(){
 
         List<Member> members = memberService.findAllMember();
