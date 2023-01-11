@@ -1,5 +1,6 @@
 package com.jung.notify.service;
 
+import com.jung.notify.domain.Member;
 import com.jung.notify.domain.News;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -17,6 +19,9 @@ public class MessageServiceTest {
 
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    MemberService memberService;
 
     @Autowired
     NewsService newsService;
@@ -48,6 +53,20 @@ public class MessageServiceTest {
         body.add("message", stringBuffer.toString());
 
 //        messageService.sendMessage(body);
+    }
+
+    @Test
+    public void 주식_메시지_전송() {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("오늘의 주식 시가 \n\n");
+
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("message", stringBuffer.toString());
+
+        Optional<Member> member = memberService.findMemberById("yongjung95");
+
+        messageService.sendMessage(body, member.get());
     }
 
 }

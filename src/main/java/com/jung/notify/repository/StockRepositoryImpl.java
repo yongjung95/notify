@@ -2,6 +2,7 @@ package com.jung.notify.repository;
 
 import com.jung.notify.domain.Member;
 import com.jung.notify.dto.QStockDto_SelectStock;
+import com.jung.notify.dto.QStockDto_SelectStockManageMember;
 import com.jung.notify.dto.StockDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.jung.notify.domain.QMember.member;
 import static com.jung.notify.domain.QStock.stock;
 import static com.jung.notify.domain.QStockManage.stockManage;
 
@@ -51,6 +53,22 @@ public class StockRepositoryImpl implements StockRepositoryQuerydsl {
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, stockListCount);
+    }
+
+    public List<StockDto.SelectStockManageMember> selectStockManageAllByMember(Member searchMember) {
+        return queryFactory
+                .select(new QStockDto_SelectStockManageMember(
+                        stock.corpName,
+                        stock.stockCode,
+                        member.lineToken
+                ))
+                .from(stockManage)
+                .join(stockManage.stock, stock)
+                .join(stockManage.member, member)
+                .where(stockManage.isUse.eq(true)
+                        .and(stockManage.member.eq(searchMember)
+                ))
+                .fetch();
     }
 
 }

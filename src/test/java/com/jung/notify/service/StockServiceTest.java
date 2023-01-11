@@ -141,4 +141,9 @@ class StockServiceTest {
         }
 
     }
+
+    @Test
+    public void 주식_가격_조회() {
+        stockService.sendStockPriceList();
+    }
 }
