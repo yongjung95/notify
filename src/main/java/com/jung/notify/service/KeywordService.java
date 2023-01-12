@@ -1,14 +1,19 @@
 package com.jung.notify.service;
 
+import com.jung.notify.common.StringUtil;
 import com.jung.notify.domain.Keyword;
 import com.jung.notify.domain.Member;
+import com.jung.notify.domain.News;
 import com.jung.notify.dto.KeywordDto;
 import com.jung.notify.mapper.KeywordMapper;
 import com.jung.notify.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +25,10 @@ public class KeywordService {
     private final KeywordRepository keywordRepository;
 
     private final MemberService memberService;
+
+    private final NewsService newsService;
+
+    private final MessageService messageService;
 
     public KeywordDto.SelectKeyword saveKeyword(KeywordDto.SaveKeywordDto saveKeywordDto) {
         Member member = memberService.findMemberById(saveKeywordDto.getMemberId()).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
@@ -62,5 +71,52 @@ public class KeywordService {
         Keyword keyword = keywordRepository.findById(selectKeyword.getId());
 
         keywordRepository.delete(keyword);
+    }
+
+    public void sendKeywordList() {
+        List<Member> memberList = memberService.findAllMember();
+
+        for(Member member : memberList){
+            if(!StringUtil.isNullOrEmpty(member.getLineToken())){
+                List<KeywordDto.SelectKeyword> keywordList = findAllByMember(member.getId());
+
+                for(KeywordDto.SelectKeyword keyword : keywordList){
+                    List<News> newsList = new ArrayList<>();
+                    int start = 0;
+
+                    while (newsList.size() < 10 && start < 1000){
+                        List<News> resultList = newsService.dateNews(keyword.getKeyword(), start += 10);
+
+                        for (News news : resultList) {
+                            if(news.getTitle().contains(keyword.getKeyword()) && newsList.size() < 10){
+                                newsList.add(news);
+                            }
+                        }
+                    }
+
+                    if(newsList.size() < 10){
+                        List<News> resultList = newsService.news(keyword.getKeyword());
+
+                        for (News news : resultList) {
+                            if(newsList.size() < 10){
+                                newsList.add(news);
+                            }
+                        }
+                    }
+
+                    StringBuffer stringBuffer = new StringBuffer();
+                    stringBuffer.append("오늘의 " +"\""+keyword.getKeyword() +"\""  + " 뉴스 \n\n");
+
+                    for (News news : newsList){
+                        stringBuffer.append(newsList.indexOf(news) + 1).append(". ").append(news.getTitle()).append("\n").append(news.getLink()).append("\n").append(news.getPubDate()).append("\n\n");
+                    }
+
+                    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+                    body.add("message", stringBuffer.toString());
+
+                    messageService.sendMessage(body, member);
+                }
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
 import com.jung.notify.dto.KeywordDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +26,7 @@ class KeywordServiceTest {
     @Autowired
     private EntityManager em;
 
-    @BeforeEach
+//    @BeforeEach
     public void before() {
         Member member1 = Member.builder().id("member1").build();
         Member member2 = Member.builder().id("member2").build();
@@ -142,5 +141,10 @@ class KeywordServiceTest {
         for (KeywordDto.SelectKeyword keyword : memberKeywordList) {
             System.out.println(keyword);
         }
+    }
+
+    @Test
+    public void 회원_키워드_메시지_발송() {
+        keywordService.sendKeywordList();
     }
 }
