@@ -49,16 +49,6 @@ public class KeywordRepository {
 
         return keywords.stream().findAny();
     }
-
-    public List<Keyword> findAll(){
-//        return em.createQuery("select k from Keyword k join fetch k.member", Keyword.class).getResultList();
-
-        return queryFactory
-                .selectFrom(keyword1)
-                .leftJoin(keyword1.member, member)
-                .fetch();
-    }
-
     public List<Keyword> findAllByMember(Member searchMember){
 //        return em.createQuery("select k from Keyword k join fetch k.member where k.member = :member", Keyword.class).setParameter("member", member).getResultList();
 
@@ -68,6 +58,14 @@ public class KeywordRepository {
                 .leftJoin(keyword1.member, member)
                 .where(eqSearchMember(searchMember))
                 .fetch();
+    }
+
+    public Keyword findById(Long keywordId) {
+        return queryFactory
+                .select(keyword1)
+                .from(keyword1)
+                .where(keyword1.id.eq(keywordId))
+                .fetchOne();
     }
 
     public BooleanExpression eqSearchMember(Member searchMember) {

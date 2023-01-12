@@ -5,6 +5,7 @@ import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
 import com.jung.notify.dto.StockDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +35,7 @@ class StockServiceTest {
 
         PageRequest pageRequest = PageRequest.of(selectStockRequest.getPage(), selectStockRequest.getSize());
 
-        Page<StockDto.SelectStock> stockList = stockService.selectStockList("삼성", pageRequest, "yongjung95");
+        Page<StockDto.SelectStock> stockList = stockService.selectStockList("삼성", pageRequest, "member1");
 
         for (StockDto.SelectStock selectStock : stockList) {
             System.out.println(selectStock);
@@ -42,7 +43,7 @@ class StockServiceTest {
     }
 
 
-//    @BeforeEach
+    @BeforeEach
     public void before() {
         Member member1 = Member.builder().id("member1").build();
         Member member2 = Member.builder().id("member2").build();
@@ -104,7 +105,7 @@ class StockServiceTest {
 
     @Test
     public void 관심종목_등록_수정() {
-        stockService.saveStockManage(9L, "member1");
+        stockService.saveStockManage(5L, "member1");
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
 
@@ -140,10 +141,5 @@ class StockServiceTest {
             System.out.println(selectStock);
         }
 
-    }
-
-    @Test
-    public void 주식_가격_조회() {
-        stockService.sendStockPriceList();
     }
 }

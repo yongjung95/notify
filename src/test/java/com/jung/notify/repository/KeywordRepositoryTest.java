@@ -71,13 +71,4 @@ class KeywordRepositoryTest {
 
         assertThat(keyword.get().getKeyword()).isEqualTo("삼성전자");
     }
-
-    @Test
-    public void 모든_키워드_조회() {
-        List<Keyword> keywords = keywordRepository.findAll();
-
-        for (Keyword keyword : keywords) {
-            System.out.println("keyword: " + keyword.getKeyword() + " member: " + keyword.getMember().getId());
-        }
-    }
 }
