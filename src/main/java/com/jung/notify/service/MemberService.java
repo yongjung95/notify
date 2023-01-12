@@ -1,6 +1,8 @@
 package com.jung.notify.service;
 
 import com.jung.notify.domain.Member;
+import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,25 +13,39 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Transactional
-    public Long saveMember(Member member){
-        return memberRepository.save(member);
+
+    public MemberDto.SelectMember saveMember(MemberDto.SaveMember saveMember){
+        Optional<MemberDto.SelectMember> selectMember = findMemberById(saveMember.getId());
+
+        if (selectMember.isPresent()) {
+            return null;
+        }
+
+        Member member = Member.builder()
+                .id(saveMember.getId())
+                .passwd(saveMember.getPasswd())
+                .lineToken(saveMember.getLineToken())
+                .build();
+
+        memberRepository.save(member);
+
+        return MemberMapper.INSTANCE.memberToSelectMember(member);
     }
 
-    public Member findMemberByUid(Long uid){
-        return memberRepository.findByUid(uid);
+    public MemberDto.SelectMember findMemberByUid(Long uid){
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByUid(uid));
     }
 
-    public Optional<Member> findMemberById(String id){
-        return memberRepository.findById(id);
+    public Optional<MemberDto.SelectMember> findMemberById(String id){
+        return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findById(id).orElse(null)));
     }
 
-    public List<Member> findAllMember(){
-        return memberRepository.findAllMember();
+    public List<MemberDto.SelectMember> findAllMember(){
+        return MemberMapper.INSTANCE.membersToSelectMembers(memberRepository.findAllMember());
     }
 }

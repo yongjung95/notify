@@ -4,8 +4,9 @@ import com.jung.notify.api.response.error.ErrorCode;
 import com.jung.notify.api.response.model.SingleResult;
 import com.jung.notify.api.response.service.ResponseService;
 import com.jung.notify.common.StringUtil;
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.News;
+import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.service.MemberService;
 import com.jung.notify.service.MessageService;
 import com.jung.notify.service.NewsService;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,9 +35,9 @@ public class TestApiController {
 
     @GetMapping("/v1/test/keyword")
     public SingleResult<?> keywordTest(@AuthenticationPrincipal User user){
-        Optional<Member> member = memberService.findMemberById(user.getUsername());
+        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername()).orElseThrow(NullPointerException::new);
 
-        if(StringUtil.isNullOrEmpty(member.get().getLineToken())){
+        if(StringUtil.isNullOrEmpty(selectMember.getLineToken())){
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
         }
 
@@ -64,16 +64,16 @@ public class TestApiController {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("message", stringBuffer.toString());
 
-        messageService.sendMessage(body, member.get());
+        messageService.sendMessage(body, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
 
         return responseService.getSuccessResult();
     }
 
     @GetMapping("/v1/test/keywords")
     public SingleResult<?> keywordsTest(@AuthenticationPrincipal User user){
-        Optional<Member> member = memberService.findMemberById(user.getUsername());
+        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername()).orElseThrow(NullPointerException::new);
 
-        if(StringUtil.isNullOrEmpty(member.get().getLineToken())){
+        if(StringUtil.isNullOrEmpty(selectMember.getLineToken())){
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
         }
 
@@ -110,7 +110,7 @@ public class TestApiController {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("message", stringBuffer.toString());
 
-            messageService.sendMessage(body, member.get());
+            messageService.sendMessage(body, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
         }
 
 

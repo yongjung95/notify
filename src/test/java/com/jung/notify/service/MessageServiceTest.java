@@ -1,7 +1,8 @@
 package com.jung.notify.service;
 
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.News;
+import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.MemberMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -64,9 +64,9 @@ public class MessageServiceTest {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("message", stringBuffer.toString());
 
-        Optional<Member> member = memberService.findMemberById("yongjung95");
+        MemberDto.SelectMember selectMember = memberService.findMemberById("yongjung95").orElseThrow(NullPointerException::new);
 
-        messageService.sendMessage(body, member.get());
+        messageService.sendMessage(body, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }
 
 }

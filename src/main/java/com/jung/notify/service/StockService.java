@@ -1,9 +1,10 @@
 package com.jung.notify.service;
 
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
+import com.jung.notify.dto.MemberDto;
 import com.jung.notify.dto.StockDto;
+import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.repository.StockManageRepository;
 import com.jung.notify.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,36 +38,36 @@ public class StockService {
     private final StockManageRepository stockManageRepository;
 
     public Page<StockDto.SelectStock> selectStockList(String corpName, Pageable pageable, String memberId) {
-        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
-        return stockRepository.selectStockList(corpName, pageable, member);
+        return stockRepository.selectStockList(corpName, pageable, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }
 
     public void saveStockManage(Long stockId, String memberId) {
-        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
         Stock stock = stockRepository.findById(stockId).orElseThrow(NullPointerException::new);
 
         StockManage stockManage = StockManage.builder()
                 .stock(stock)
-                .member(member)
+                .member(MemberMapper.INSTANCE.selectMemberToMember(selectMember))
                 .build();
 
         stockManageRepository.save(stockManage);
     }
 
     public Page<StockDto.SelectStock> selectStockManageList(Pageable pageable, String memberId) {
-        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
-        return stockManageRepository.selectStockManageList(pageable, member);
+        return stockManageRepository.selectStockManageList(pageable, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }
 
     public void sendMorningStockPriceList(boolean isMorning) {
 
-        List<Member> memberList = memberService.findAllMember();
+        List<MemberDto.SelectMember> selectMemberList = memberService.findAllMember();
 
-        for (Member member : memberList) {
-            List<StockDto.SelectStockManageMember> selectStockManageMemberList = stockRepository.selectStockManageAllByMember(member);
+        for (MemberDto.SelectMember selectMember : selectMemberList) {
+            List<StockDto.SelectStockManageMember> selectStockManageMemberList = stockRepository.selectStockManageAllByMember(MemberMapper.INSTANCE.selectMemberToMember(selectMember));
 
             StringBuffer stringBuffer = new StringBuffer();
 
@@ -124,7 +125,7 @@ public class StockService {
                 MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
                 body.add("message", stringBuffer.toString());
 
-                messageService.sendMessage(body, member);
+                messageService.sendMessage(body, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
             }
         }
     }

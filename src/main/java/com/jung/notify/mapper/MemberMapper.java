@@ -5,6 +5,8 @@ import com.jung.notify.dto.MemberDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface MemberMapper {
 
@@ -12,5 +14,9 @@ public interface MemberMapper {
 
     MemberDto.SelectMember memberToSelectMember(Member member);
 
+    Member selectMemberToMember(MemberDto.SelectMember selectMember);
+
     Member saveMemberToMember(MemberDto.SaveMember saveMember);
+
+    List<MemberDto.SelectMember> membersToSelectMembers(List<Member> members);
 }

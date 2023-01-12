@@ -1,6 +1,5 @@
 package com.jung.notify.service;
 
-import com.jung.notify.api.response.service.ResponseService;
 import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
@@ -22,9 +21,6 @@ class StockServiceTest {
 
     @Autowired
     private StockService stockService;
-
-    @Autowired
-    private ResponseService responseService;
 
     @Autowired
     private EntityManager em;

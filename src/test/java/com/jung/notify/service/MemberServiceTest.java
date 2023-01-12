@@ -1,10 +1,8 @@
 package com.jung.notify.service;
 
 import com.jung.notify.common.Sha256;
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.MemberRole;
 import com.jung.notify.dto.MemberDto;
-import com.jung.notify.mapper.MemberMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +31,10 @@ public class MemberServiceTest {
         saveMember.setPasswd(Sha256.encrypt("1234"));
         saveMember.setMemberRole(MemberRole.MEMBER);
 
-        memberService.saveMember(MemberMapper.INSTANCE.saveMemberToMember(saveMember));
+        memberService.saveMember(saveMember);
 
         // when
-        Optional<Member> member = memberService.findMemberById(saveMember.getId());
+        Optional<MemberDto.SelectMember> member = memberService.findMemberById(saveMember.getId());
         // then
         assertEquals(saveMember.getId(), member.get().getId());
     }
@@ -49,13 +47,13 @@ public class MemberServiceTest {
         saveMember.setId("wlswjd95");
         saveMember.setPasswd(Sha256.encrypt("1234"));
 
-        Long uid = memberService.saveMember(MemberDto.dtoChangeEntity(saveMember));
+        MemberDto.SelectMember selectMember = memberService.saveMember(saveMember);
 
         // when
-        Member findMember = memberService.findMemberById("wlswjd95").get();
+        MemberDto.SelectMember findMember = memberService.findMemberById("wlswjd95").get();
 
         // then
-        assertEquals(uid, findMember.getUid());
+        assertEquals(selectMember.getUid(), findMember.getUid());
     }
 
 }

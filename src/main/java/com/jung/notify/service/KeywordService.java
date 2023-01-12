@@ -2,10 +2,11 @@ package com.jung.notify.service;
 
 import com.jung.notify.common.StringUtil;
 import com.jung.notify.domain.Keyword;
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.News;
 import com.jung.notify.dto.KeywordDto;
+import com.jung.notify.dto.MemberDto;
 import com.jung.notify.mapper.KeywordMapper;
+import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class KeywordService {
     private final MessageService messageService;
 
     public KeywordDto.SelectKeyword saveKeyword(KeywordDto.SaveKeywordDto saveKeywordDto) {
-        Member member = memberService.findMemberById(saveKeywordDto.getMemberId()).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(saveKeywordDto.getMemberId()).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
         Optional<KeywordDto.SelectKeyword> findKeyword = findOneByKeyword(saveKeywordDto.getKeyword(), saveKeywordDto.getMemberId());
 
@@ -41,7 +42,7 @@ public class KeywordService {
 
         Keyword keyword = Keyword.builder()
                 .keyword(saveKeywordDto.getKeyword())
-                .member(member)
+                .member(MemberMapper.INSTANCE.selectMemberToMember(selectMember))
                 .build();
 
         keywordRepository.save(keyword);
@@ -50,21 +51,21 @@ public class KeywordService {
     }
 
     public Optional<KeywordDto.SelectKeyword> findOne(Long id, String memberId) {
-        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
-        return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOne(id, member).orElse(null)));
+        return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOne(id, MemberMapper.INSTANCE.selectMemberToMember(selectMember)).orElse(null)));
     }
 
     public Optional<KeywordDto.SelectKeyword> findOneByKeyword(String keyword, String memberId) {
-        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
-        return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOneByKeyword(keyword, member).orElse(null)));
+        return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOneByKeyword(keyword, MemberMapper.INSTANCE.selectMemberToMember(selectMember)).orElse(null)));
     }
 
     public List<KeywordDto.SelectKeyword> findAllByMember(String memberId) {
-        Member member = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
 
-        return KeywordMapper.INSTANCE.keywordsToSelectKeywords(keywordRepository.findAllByMember(member));
+        return KeywordMapper.INSTANCE.keywordsToSelectKeywords(keywordRepository.findAllByMember(MemberMapper.INSTANCE.selectMemberToMember(selectMember)));
     }
 
     public void delete(KeywordDto.SelectKeyword selectKeyword) {
@@ -74,11 +75,11 @@ public class KeywordService {
     }
 
     public void sendKeywordList() {
-        List<Member> memberList = memberService.findAllMember();
+        List<MemberDto.SelectMember> memberList = memberService.findAllMember();
 
-        for(Member member : memberList){
-            if(!StringUtil.isNullOrEmpty(member.getLineToken())){
-                List<KeywordDto.SelectKeyword> keywordList = findAllByMember(member.getId());
+        for(MemberDto.SelectMember selectMember : memberList){
+            if(!StringUtil.isNullOrEmpty(selectMember.getLineToken()) && selectMember.getId().equals("yongjung95")){
+                List<KeywordDto.SelectKeyword> keywordList = findAllByMember(selectMember.getId());
 
                 for(KeywordDto.SelectKeyword keyword : keywordList){
                     List<News> newsList = new ArrayList<>();
@@ -114,7 +115,7 @@ public class KeywordService {
                     MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
                     body.add("message", stringBuffer.toString());
 
-                    messageService.sendMessage(body, member);
+                    messageService.sendMessage(body, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
                 }
             }
         }

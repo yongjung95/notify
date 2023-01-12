@@ -3,7 +3,7 @@ package com.jung.notify.api;
 import com.jung.notify.api.response.error.ErrorCode;
 import com.jung.notify.api.response.model.SingleResult;
 import com.jung.notify.api.response.service.ResponseService;
-import com.jung.notify.domain.Member;
+import com.jung.notify.dto.MemberDto;
 import com.jung.notify.dto.StockDto;
 import com.jung.notify.service.MemberService;
 import com.jung.notify.service.StockService;
@@ -49,9 +49,9 @@ public class StockApiController {
             return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
         }
 
-        Optional<Member> member = memberService.findMemberById(user.getUsername());
+        Optional<MemberDto.SelectMember> selectMember = memberService.findMemberById(user.getUsername());
 
-        if (!member.isPresent()) {
+        if (!selectMember.isPresent()) {
             return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
         }
 
