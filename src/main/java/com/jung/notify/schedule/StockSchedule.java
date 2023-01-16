@@ -11,13 +11,19 @@ public class StockSchedule {
 
     private final StockService stockService;
 
-    @Scheduled(cron = "0 1 9 1/1 * *", zone = "GMT+9:00")
+    private final HolidaySchedule holidaySchedule;
+
+    @Scheduled(cron = "0 1 9 1/1 * MON-FRI", zone = "GMT+9:00")
     public void morningStockScheduleV1() {
-        stockService.sendMorningStockPriceList(true);
+        if (!holidaySchedule.isIsHoliday()) {
+            stockService.sendMorningStockPriceList(true);
+        }
     }
 
-    @Scheduled(cron = "0 31 15 1/1 * *", zone = "GMT+9:00")
+    @Scheduled(cron = "0 31 15 1/1 * MON-FRI", zone = "GMT+9:00")
     public void eveningScheduleV1() {
-        stockService.sendMorningStockPriceList(false);
+        if (!holidaySchedule.isIsHoliday()) {
+            stockService.sendMorningStockPriceList(false);
+        }
     }
 }

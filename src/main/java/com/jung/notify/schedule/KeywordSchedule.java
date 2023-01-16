@@ -1,9 +1,6 @@
 package com.jung.notify.schedule;
 
 import com.jung.notify.service.KeywordService;
-import com.jung.notify.service.MemberService;
-import com.jung.notify.service.MessageService;
-import com.jung.notify.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,13 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KeywordSchedule {
 
-    private final MemberService memberService;
-
     private final KeywordService keywordService;
-
-    private final NewsService newsService;
-
-    private final MessageService messageService;
 
 //    @Scheduled(cron = "0 0 8 1/1 * *")
 //    public void keywordSchedule(){
