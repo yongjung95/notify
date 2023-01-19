@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Keyword {
+public class Keyword extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -24,6 +23,4 @@ public class Keyword {
     private Member member;
 
     private String keyword;
-
-    private LocalDateTime created;
 }

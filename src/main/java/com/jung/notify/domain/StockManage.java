@@ -1,11 +1,8 @@
 package com.jung.notify.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @ToString
 @Builder
@@ -13,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class StockManage {
+public class StockManage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -28,12 +25,6 @@ public class StockManage {
     private Stock stock;
 
     private boolean isUse;
-
-    @CreatedDate
-    private LocalDateTime createDate;
-
-    @LastModifiedDate
-    private LocalDateTime updateDate;
 
     public void changeIsUse() {
         this.isUse = !this.isUse;

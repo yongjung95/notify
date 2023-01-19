@@ -4,19 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Stock {
+public class Stock extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -29,7 +27,4 @@ public class Stock {
     private String dataModifyDate;
 
     private String stockCode;
-
-    @CreatedDate
-    private LocalDateTime createDate;
 }
