@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="fragments/header :: header"/>
 <style>
     .fieldError {
         border-color: #bd2130;
@@ -10,48 +10,55 @@
 
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-        <div class="form-group">
-            <label th:for="id">아이디</label>
-            <input id="id" type="text"  class="form-control"
-                   placeholder="아이디를 입력하세요" >
-        </div>
-        <div class="form-group">
-            <label th:for="passwd">패스워드</label>
-            <input id="passwd" type="password" class="form-control"
-                   placeholder="패스워드를 입력하세요" >
-        </div>
-        <div class="form-group">
-            <label th:for="lineToken">라인 토큰</label>
-            <a href="https://engineering.linecorp.com/ko/blog/line-notify-with-node-js-python-1-basic/" target="_blank">라인 토큰 발급 방법</a>
-            <input id="lineToken" type="text" class="form-control" placeholder="라인토큰을 입력하세요">
-        </div>
-        <button class="btn btn-primary" onclick="saveMember()">Submit</button>
+    <div class="form-group">
+        <label th:for="id">아이디</label>
+        <input id="id" type="text" class="form-control"
+               placeholder="아이디를 입력하세요">
+    </div>
+    <div class="form-group">
+        <label th:for="email">이메일</label>
+        <input id="email" type="text" class="form-control"
+               placeholder="이메일을 입력하세요">
+    </div>
+    <div class="form-group">
+        <label th:for="passwd">패스워드</label>
+        <input id="passwd" type="password" class="form-control"
+               placeholder="패스워드를 입력하세요">
+    </div>
+    <div class="form-group">
+        <label th:for="lineToken">라인 토큰</label>
+        <a href="https://engineering.linecorp.com/ko/blog/line-notify-with-node-js-python-1-basic/" target="_blank">라인
+            토큰 발급 방법</a>
+        <input id="lineToken" type="text" class="form-control" placeholder="라인토큰을 입력하세요">
+    </div>
+    <button class="btn btn-primary mb-3" onclick="saveMember()">Submit</button>
     <br/>
-    <div th:replace="fragments/footer :: footer" />
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 <script>
     function saveMember() {
         var saveMember = JSON.stringify({
             id: document.getElementById("id").value,
-            lineToken:document.getElementById("lineToken").value,
+            email: document.getElementById("email").value,
+            lineToken: document.getElementById("lineToken").value,
             passwd: document.getElementById("passwd").value
         });
 
         $.ajax({
-            type : "POST",
-            url : "/v1/member",
-            contentType : "application/json",
+            type: "POST",
+            url: "/v1/member",
+            contentType: "application/json",
             dataType: "json",
-            data : saveMember,
-            success : function(res){
-                if(res.code == 200){
+            data: saveMember,
+            success: function (res) {
+                if (res.code == 200) {
                     alert("회원 가입 성공!!");
-                    location.href="/";
-                }else{
+                    location.href = "/";
+                } else {
                     alert(res.message);
                 }
             },
-            error : function(XMLHttpRequest, textStatus, errorThrown){
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("통신 실패.")
             }
         });

@@ -1,6 +1,5 @@
 package com.jung.notify.dto;
 
-import com.jung.notify.domain.Member;
 import com.jung.notify.domain.MemberRole;
 import lombok.Data;
 
@@ -12,6 +11,8 @@ public class MemberDto {
         private String passwd;
         private MemberRole memberRole;
         private String lineToken;
+
+        private String email;
     }
 
     @Data
@@ -21,12 +22,6 @@ public class MemberDto {
         private String passwd;
         private MemberRole memberRole;
         private String lineToken;
-    }
-
-    public static Member dtoChangeEntity(SaveMember saveMember) {
-        return Member.builder()
-                .id(saveMember.id)
-                .passwd(saveMember.passwd)
-                .lineToken(saveMember.lineToken).build();
+        private String email;
     }
 }

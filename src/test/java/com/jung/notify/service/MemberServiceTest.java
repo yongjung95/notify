@@ -29,12 +29,15 @@ public class MemberServiceTest {
 
         saveMember.setId("wlswjd95");
         saveMember.setPasswd(Sha256.encrypt("1234"));
+        saveMember.setEmail("wlswjd95@naver.com");
         saveMember.setMemberRole(MemberRole.MEMBER);
 
         memberService.saveMember(saveMember);
 
         // when
         Optional<MemberDto.SelectMember> member = memberService.findMemberById(saveMember.getId());
+
+        System.out.println(member);
         // then
         assertEquals(saveMember.getId(), member.get().getId());
     }
@@ -45,6 +48,7 @@ public class MemberServiceTest {
         MemberDto.SaveMember saveMember = new MemberDto.SaveMember();
 
         saveMember.setId("wlswjd95");
+        saveMember.setEmail("wlswjd95@naver.com");
         saveMember.setPasswd(Sha256.encrypt("1234"));
 
         MemberDto.SelectMember selectMember = memberService.saveMember(saveMember);

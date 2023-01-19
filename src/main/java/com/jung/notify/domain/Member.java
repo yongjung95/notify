@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member extends BaseTimeEntity{
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -26,4 +26,6 @@ public class Member extends BaseTimeEntity{
     private MemberRole memberRole;
 
     private String lineToken;
+
+    private String email;
 }

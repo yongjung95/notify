@@ -1,6 +1,7 @@
 package com.jung.notify.service;
 
 import com.jung.notify.domain.Member;
+import com.jung.notify.domain.MemberRole;
 import com.jung.notify.dto.MemberDto;
 import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.repository.MemberRepository;
@@ -30,6 +31,8 @@ public class MemberService {
                 .id(saveMember.getId())
                 .passwd(saveMember.getPasswd())
                 .lineToken(saveMember.getLineToken())
+                .email(saveMember.getEmail())
+                .memberRole(MemberRole.MEMBER)
                 .build();
 
         memberRepository.save(member);

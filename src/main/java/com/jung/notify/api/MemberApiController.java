@@ -29,7 +29,7 @@ public class MemberApiController {
 
     @PostMapping("/v1/member")
     public SingleResult<?> member(@RequestBody MemberDto.SaveMember saveMember){
-        List<String> list = Arrays.asList(saveMember.getId(), saveMember.getPasswd());
+        List<String> list = Arrays.asList(saveMember.getId(), saveMember.getPasswd(), saveMember.getEmail());
         if(list.stream().anyMatch(StringUtil::isNullOrEmpty)) return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
 
         saveMember.setPasswd(bCryptPasswordEncoder.encode(saveMember.getPasswd()));

@@ -16,7 +16,5 @@ public interface MemberMapper {
 
     Member selectMemberToMember(MemberDto.SelectMember selectMember);
 
-    Member saveMemberToMember(MemberDto.SaveMember saveMember);
-
     List<MemberDto.SelectMember> membersToSelectMembers(List<Member> members);
 }
