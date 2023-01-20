@@ -24,24 +24,24 @@ public class MemberRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Long save(Member member){
+    public Long save(Member member) {
         em.persist(member);
 
         return member.getUid();
     }
 
-    public Member findByUid(Long uid){
+    public Member findByUid(Long uid) {
 //        return em.find(Member.class, uid);
 
         return queryFactory.selectFrom(member).where(member.uid.eq(uid)).fetchOne();
     }
 
-    public Optional<Member> findById(String id){
+    public Optional<Member> findById(String id) {
 //        List<Member> members = em.createQuery("select m from Member m where m.id = :id", Member.class).setParameter("id", id).getResultList();
         return Optional.ofNullable(queryFactory.select(member).from(member).where(member.id.eq(id)).fetchOne());
     }
 
-    public List<Member> findAllMember(){
+    public List<Member> findAllMember() {
 //        return em.createQuery("select m from Member m", Member.class).getResultList();
 
         return queryFactory.selectFrom(member).fetch();

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+    .form-group {
+        text-align: start;
+    }
+</style>
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="jumbotron">
+        <h1>Notify</h1>
+        <p class="lead">마이페이지</p>
+        <p>라인 토큰을 입력하셔야 Notify 의 모든 서비스를 정상적으로 이용하실 수 있습니다.</p>
+
+        <form th:object="${member}">
+            <input type="hidden" th:field="*{uid}">
+            <div class="form-group">
+                <label th:for="id">아이디</label>
+                <input th:field="*{id}" type="text" class="form-control"
+                       placeholder="아이디를 입력하세요" readonly>
+            </div>
+            <div class="form-group">
+                <label th:for="email">이메일</label>
+                <input th:field="*{email}" type="text" class="form-control"
+                       placeholder="이메일을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label th:for="passwd">패스워드</label>
+                <input th:field="*{passwd}" type="password" class="form-control"
+                       placeholder="패스워드 변경 시에만 클릭해주세요." readonly onclick="this.readOnly = false">
+            </div>
+            <div class="form-group">
+                <label th:for="lineToken">라인 토큰</label>
+                <a href="https://engineering.linecorp.com/ko/blog/line-notify-with-node-js-python-1-basic/" target="_blank">라인
+                    토큰 발급 방법</a>
+                <input th:field="*{lineToken}" type="text" class="form-control" placeholder="라인토큰을 입력하세요">
+            </div>
+        </form>
+    </div>
+
+    <button class="btn btn-primary mb-3" onclick="saveMember()">Submit</button>
+    <br/>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+<script>
+    function saveMember() {
+        var saveMember = JSON.stringify({
+            uid: document.getElementById("uid").value,
+            id: document.getElementById("id").value,
+            email: document.getElementById("email").value,
+            lineToken: document.getElementById("lineToken").value,
+            passwd: document.getElementById("passwd").value
+        });
+
+        $.ajax({
+            type: "PUT",
+            url: "/v1/member",
+            contentType: "application/json",
+            dataType: "json",
+            data: saveMember,
+            success: function (res) {
+                if (res.code == 200) {
+                    alert("수정 완료");
+                    location.href = "/member";
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("통신 실패.")
+            }
+        });
+    }
+</script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+</body>
+</html>

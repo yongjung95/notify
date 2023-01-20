@@ -11,7 +11,15 @@ public class MemberDto {
         private String passwd;
         private MemberRole memberRole;
         private String lineToken;
+        private String email;
+    }
 
+    @Data
+    public static class UpdateMember {
+        private Long uid;
+        private String passwd;
+        private MemberRole memberRole;
+        private String lineToken;
         private String email;
     }
 

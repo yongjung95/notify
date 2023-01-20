@@ -7,6 +7,8 @@ public enum ErrorCode {
 
     // common
     PARAMETER_IS_EMPTY(400,"C001","파라미터가 올바르지 않습니다."),
+    NOT_EMAIL_PATTERN(400,"C002","이메일 형식이 올바르지 않습니다."),
+
 
     // member
     DUPLICATION_ID(400,"M001","중복된 아이디 입니다."),

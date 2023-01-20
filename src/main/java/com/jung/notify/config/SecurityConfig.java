@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable(); //csrf 비활성화
         http.authorizeRequests()
-                .antMatchers("/login","/loginForm","/member/new","/v1/member", "/v1/stock").permitAll() // 인증만 되면 들어갈 수 있는 주소
+                .antMatchers("/login", "/loginForm", "/member/new", "/v1/member", "/v1/stock").permitAll() // 인증만 되면 들어갈 수 있는 주소
                 .antMatchers("/admin/**").hasAuthority(MemberRole.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
@@ -43,11 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/js/**","/css/**","/img/**","/frontend/**");
+        web.ignoring().antMatchers("/js/**", "/css/**", "/img/**", "/frontend/**");
     }
 
+
+    // 비밀번호 체크까지 같이 체크
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(loginService);
+        auth.userDetailsService(loginService).passwordEncoder(encodePwd());
     }
 }

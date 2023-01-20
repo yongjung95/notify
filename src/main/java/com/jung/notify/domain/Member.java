@@ -1,5 +1,6 @@
 package com.jung.notify.domain;
 
+import com.jung.notify.dto.MemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +29,10 @@ public class Member extends BaseTimeEntity {
     private String lineToken;
 
     private String email;
+
+    public void updateMember(MemberDto.UpdateMember updateMember) {
+        this.passwd = updateMember.getPasswd();
+        this.lineToken = updateMember.getLineToken();
+        this.email = updateMember.getEmail();
+    }
 }

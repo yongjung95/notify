@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
 
-    public MemberDto.SelectMember saveMember(MemberDto.SaveMember saveMember){
+    public MemberDto.SelectMember saveMember(MemberDto.SaveMember saveMember) {
         Optional<MemberDto.SelectMember> selectMember = findMemberById(saveMember.getId());
 
         if (selectMember.isPresent()) {
@@ -40,15 +42,33 @@ public class MemberService {
         return MemberMapper.INSTANCE.memberToSelectMember(member);
     }
 
-    public MemberDto.SelectMember findMemberByUid(Long uid){
+    public MemberDto.SelectMember updateMember(MemberDto.UpdateMember updateMember) {
+        Member member = memberRepository.findByUid(updateMember.getUid());
+
+        member.updateMember(updateMember);
+
+        memberRepository.save(member);
+
+        return MemberMapper.INSTANCE.memberToSelectMember(member);
+    }
+
+    public MemberDto.SelectMember findMemberByUid(Long uid) {
         return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByUid(uid));
     }
 
-    public Optional<MemberDto.SelectMember> findMemberById(String id){
+    public Optional<MemberDto.SelectMember> findMemberById(String id) {
         return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findById(id).orElse(null)));
     }
 
-    public List<MemberDto.SelectMember> findAllMember(){
+    public List<MemberDto.SelectMember> findAllMember() {
         return MemberMapper.INSTANCE.membersToSelectMembers(memberRepository.findAllMember());
+    }
+
+    public boolean checkEmail(String email) {
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+
+        return m.matches();
     }
 }

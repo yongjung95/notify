@@ -9,6 +9,7 @@ import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,16 +27,31 @@ public class MemberApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
     @PostMapping("/v1/member")
-    public SingleResult<?> member(@RequestBody MemberDto.SaveMember saveMember){
+    public SingleResult<?> member(@RequestBody MemberDto.SaveMember saveMember) {
         List<String> list = Arrays.asList(saveMember.getId(), saveMember.getPasswd(), saveMember.getEmail());
-        if(list.stream().anyMatch(StringUtil::isNullOrEmpty)) return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
+
+        if (list.stream().anyMatch(StringUtil::isNullOrEmpty))
+            return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
 
         saveMember.setPasswd(bCryptPasswordEncoder.encode(saveMember.getPasswd()));
 
         memberService.saveMember(saveMember);
 
         return responseService.getSuccessResult();
+    }
+
+    @PutMapping("/v1/member")
+    public SingleResult<?> memberUpdate(@RequestBody MemberDto.UpdateMember updateMember) {
+        if(!memberService.checkEmail(updateMember.getEmail())) {
+            return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
+        }
+
+        updateMember.setPasswd(bCryptPasswordEncoder.encode(updateMember.getPasswd()));
+
+        MemberDto.SelectMember selectMember = memberService.updateMember(updateMember);
+
+        return responseService.getSingleResult(selectMember);
+
     }
 }
