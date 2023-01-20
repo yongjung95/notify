@@ -42,14 +42,20 @@ public class MemberService {
         return true;
     }
 
-    public MemberDto.SelectMember updateMember(MemberDto.UpdateMember updateMember) {
+    public boolean updateMember(MemberDto.UpdateMember updateMember) {
+        Optional<MemberDto.SelectMember> selectMember = findByEmailAndNotUid(updateMember.getUid(), updateMember.getEmail());
+
+        if (selectMember.isPresent()) {
+            return false;
+        }
+
         Member member = memberRepository.findByUid(updateMember.getUid());
 
         member.updateMember(updateMember);
 
         memberRepository.save(member);
 
-        return MemberMapper.INSTANCE.memberToSelectMember(member);
+        return true;
     }
 
     public MemberDto.SelectMember findMemberByUid(Long uid) {
@@ -62,6 +68,10 @@ public class MemberService {
 
     public Optional<MemberDto.SelectMember> findMemberByIdOrEmail(String id, String email) {
         return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByIdOrEmail(id, email).orElse(null)));
+    }
+
+    public Optional<MemberDto.SelectMember> findByEmailAndNotUid(Long uid, String email) {
+        return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByEmailAndNotUid(uid, email).orElse(null)));
     }
 
     public List<MemberDto.SelectMember> findAllMember() {

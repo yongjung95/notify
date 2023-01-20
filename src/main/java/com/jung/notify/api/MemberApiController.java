@@ -54,9 +54,8 @@ public class MemberApiController {
             updateMember.setPasswd(bCryptPasswordEncoder.encode(updateMember.getPasswd()));
         }
 
-        MemberDto.SelectMember selectMember = memberService.updateMember(updateMember);
 
-        return responseService.getSingleResult(selectMember);
+        return memberService.updateMember(updateMember) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.DUPLICATION_MEMBER);
 
     }
 }
