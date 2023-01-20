@@ -22,11 +22,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
 
-    public MemberDto.SelectMember saveMember(MemberDto.SaveMember saveMember) {
-        Optional<MemberDto.SelectMember> selectMember = findMemberById(saveMember.getId());
+    public boolean saveMember(MemberDto.SaveMember saveMember) {
+        Optional<MemberDto.SelectMember> selectMember = findMemberByIdOrEmail(saveMember.getId(), saveMember.getEmail());
 
         if (selectMember.isPresent()) {
-            return null;
+            return false;
         }
 
         Member member = Member.builder()
@@ -39,7 +39,7 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return MemberMapper.INSTANCE.memberToSelectMember(member);
+        return true;
     }
 
     public MemberDto.SelectMember updateMember(MemberDto.UpdateMember updateMember) {
@@ -58,6 +58,10 @@ public class MemberService {
 
     public Optional<MemberDto.SelectMember> findMemberById(String id) {
         return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findById(id).orElse(null)));
+    }
+
+    public Optional<MemberDto.SelectMember> findMemberByIdOrEmail(String id, String email) {
+        return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByIdOrEmail(id, email).orElse(null)));
     }
 
     public List<MemberDto.SelectMember> findAllMember() {

@@ -34,11 +34,13 @@ public class MemberApiController {
         if (list.stream().anyMatch(StringUtil::isNullOrEmpty))
             return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
 
+        if (!memberService.checkEmail(saveMember.getEmail())) {
+            return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
+        }
+
         saveMember.setPasswd(bCryptPasswordEncoder.encode(saveMember.getPasswd()));
 
-        memberService.saveMember(saveMember);
-
-        return responseService.getSuccessResult();
+        return memberService.saveMember(saveMember) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.DUPLICATION_MEMBER);
     }
 
     @PutMapping("/v1/member")
