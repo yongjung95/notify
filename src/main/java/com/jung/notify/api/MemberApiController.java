@@ -8,6 +8,7 @@ import com.jung.notify.dto.MemberDto;
 import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +50,9 @@ public class MemberApiController {
             return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
         }
 
-        updateMember.setPasswd(bCryptPasswordEncoder.encode(updateMember.getPasswd()));
+        if(StringUtils.hasText(updateMember.getPasswd())) {
+            updateMember.setPasswd(bCryptPasswordEncoder.encode(updateMember.getPasswd()));
+        }
 
         MemberDto.SelectMember selectMember = memberService.updateMember(updateMember);
 

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
@@ -31,7 +32,7 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     public void updateMember(MemberDto.UpdateMember updateMember) {
-        this.passwd = updateMember.getPasswd();
+        this.passwd = StringUtils.hasText(updateMember.getPasswd()) ? updateMember.getPasswd() : this.passwd;
         this.lineToken = updateMember.getLineToken();
         this.email = updateMember.getEmail();
     }
