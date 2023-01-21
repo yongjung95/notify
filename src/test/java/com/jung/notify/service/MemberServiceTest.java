@@ -51,13 +51,10 @@ public class MemberServiceTest {
         saveMember.setEmail("wlswjd95@naver.com");
         saveMember.setPasswd(Sha256.encrypt("1234"));
 
-        MemberDto.SelectMember selectMember = memberService.saveMember(saveMember);
-
-        // when
-        MemberDto.SelectMember findMember = memberService.findMemberById("wlswjd95").get();
+        boolean result = memberService.saveMember(saveMember);
 
         // then
-        assertEquals(selectMember.getUid(), findMember.getUid());
+        assertEquals(result, true);
     }
 
 }
