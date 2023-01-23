@@ -58,6 +58,19 @@ public class MemberService {
         return true;
     }
 
+    public boolean changePasswd(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+
+        if (member.isPresent()) {
+            return false;
+        }
+
+        MemberDto.UpdateMember updateMember = MemberMapper.INSTANCE.memberToUpdateMember(member.get());
+
+
+        return true;
+    }
+
     public MemberDto.SelectMember findMemberByUid(Long uid) {
         return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByUid(uid));
     }

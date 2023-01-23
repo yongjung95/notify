@@ -49,6 +49,10 @@ public class MemberRepository {
         return Optional.ofNullable(queryFactory.select(member).from(member).where(member.email.eq(email).and(member.uid.ne(uid))).fetchOne());
     }
 
+    public Optional<Member> findByEmail(String email) {
+        return Optional.ofNullable(queryFactory.select(member).from(member).where(member.email.eq(email)).fetchOne());
+    }
+
     public List<Member> findAllMember() {
 //        return em.createQuery("select m from Member m", Member.class).getResultList();
 
