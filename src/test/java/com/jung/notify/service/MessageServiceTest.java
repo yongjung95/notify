@@ -64,7 +64,7 @@ public class MessageServiceTest {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("message", stringBuffer.toString());
 
-        MemberDto.SelectMember selectMember = memberService.findMemberById("yongjung95").orElseThrow(NullPointerException::new);
+        MemberDto.SelectMember selectMember = memberService.findMemberById("yongjung95");
 
         messageService.sendMessage(body, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }

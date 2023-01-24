@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 @Transactional
@@ -113,9 +112,9 @@ class KeywordServiceTest {
 
     @Test
     public void 키워드_보유_조회() {
-        Optional<KeywordDto.SelectKeyword> oneByKeyword = keywordService.findOneByKeyword("하이닉스", "member1");
+        KeywordDto.SelectKeyword oneByKeyword = keywordService.findOneByKeyword("하이닉스", "member1");
 
-        System.out.println(oneByKeyword.orElse(null));
+        System.out.println(oneByKeyword);
     }
     
     @Test

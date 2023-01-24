@@ -66,7 +66,7 @@ class StockManageRepositoryTest {
     @Test
     public void 회원_주식_등록_조회() {
         Stock stock = stockRepository.findById(5L).get();
-        Member member = memberRepository.findById("member1").get();
+        Member member = memberRepository.findById("member1");
 
         StockManage stockManage = StockManage.builder()
                 .stock(stock)

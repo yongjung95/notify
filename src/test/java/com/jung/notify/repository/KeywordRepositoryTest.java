@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,7 +53,7 @@ class KeywordRepositoryTest {
 
     @Test
     public void 회원_키워드_목록조회() {
-        Member member = memberRepository.findById("member1").get();
+        Member member = memberRepository.findById("member1");
 
         List<Keyword> memberKeywords = keywordRepository.findAllByMember(member);
 
@@ -65,10 +64,10 @@ class KeywordRepositoryTest {
 
     @Test
     public void 회원_키워드_조회() {
-        Member member = memberRepository.findById("member1").get();
+        Member member = memberRepository.findById("member1");
 
-        Optional<Keyword> keyword = keywordRepository.findOneByKeyword("삼성전자", member);
+        Keyword keyword = keywordRepository.findOneByKeyword("삼성전자", member);
 
-        assertThat(keyword.get().getKeyword()).isEqualTo("삼성전자");
+        assertThat(keyword.getKeyword()).isEqualTo("삼성전자");
     }
 }

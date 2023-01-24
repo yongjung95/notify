@@ -124,7 +124,7 @@ class StockRepositoryTest {
 
     @Test
     public void 주식_종목_조회() {
-        Member member = memberRepository.findById("member1").get();
+        Member member = memberRepository.findById("member1");
 
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "corpName"));
