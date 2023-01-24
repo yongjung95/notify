@@ -6,8 +6,11 @@ import com.jung.notify.dto.MemberDto;
 import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.RandomString;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final MailService mailService;
 
     public boolean saveMember(MemberDto.SaveMember saveMember) {
         Optional<MemberDto.SelectMember> selectMember = findMemberByIdOrEmail(saveMember.getId(), saveMember.getEmail());
@@ -31,7 +37,7 @@ public class MemberService {
 
         Member member = Member.builder()
                 .id(saveMember.getId())
-                .passwd(saveMember.getPasswd())
+                .passwd(bCryptPasswordEncoder.encode(saveMember.getPasswd()))
                 .lineToken(saveMember.getLineToken())
                 .email(saveMember.getEmail())
                 .memberRole(MemberRole.MEMBER)
@@ -43,13 +49,15 @@ public class MemberService {
     }
 
     public boolean updateMember(MemberDto.UpdateMember updateMember) {
-        Optional<MemberDto.SelectMember> selectMember = findByEmailAndNotUid(updateMember.getUid(), updateMember.getEmail());
+        Member member = findMemberByUid(updateMember.getUid());
 
-        if (selectMember.isPresent()) {
+        if (member == null) {
             return false;
         }
 
-        Member member = memberRepository.findByUid(updateMember.getUid());
+        if (StringUtils.hasText(updateMember.getPasswd())) {
+            updateMember.setPasswd(bCryptPasswordEncoder.encode(updateMember.getPasswd()));
+        }
 
         member.updateMember(updateMember);
 
@@ -58,21 +66,32 @@ public class MemberService {
         return true;
     }
 
-    public boolean changePasswd(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
+    public boolean resetPasswd(MemberDto.UpdateMember updateMember) {
+        Member member = findMemberByUid(updateMember.getUid());
 
-        if (member.isPresent()) {
+        if (member == null) {
             return false;
         }
 
-        MemberDto.UpdateMember updateMember = MemberMapper.INSTANCE.memberToUpdateMember(member.get());
+        String passwd = RandomString.make();
 
+        updateMember.setPasswd(bCryptPasswordEncoder.encode(passwd));
+
+        member.updateMember(updateMember);
+
+        memberRepository.save(member);
+
+        mailService.sendResetPasswd(member.getEmail(), passwd);
 
         return true;
     }
 
-    public MemberDto.SelectMember findMemberByUid(Long uid) {
-        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByUid(uid));
+    public MemberDto.SelectMember findMemberByEmail(String email) {
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByEmail(email));
+    }
+
+    public Member findMemberByUid(Long uid) {
+        return memberRepository.findByUid(uid);
     }
 
     public Optional<MemberDto.SelectMember> findMemberById(String id) {
@@ -83,8 +102,8 @@ public class MemberService {
         return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByIdOrEmail(id, email).orElse(null)));
     }
 
-    public Optional<MemberDto.SelectMember> findByEmailAndNotUid(Long uid, String email) {
-        return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByEmailAndNotUid(uid, email).orElse(null)));
+    public MemberDto.SelectMember findByEmailAndNotUid(String email, Long uid) {
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByEmailAndNotUid(email, uid));
     }
 
     public List<MemberDto.SelectMember> findAllMember() {
@@ -98,4 +117,5 @@ public class MemberService {
 
         return m.matches();
     }
+
 }

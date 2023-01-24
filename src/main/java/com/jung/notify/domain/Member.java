@@ -33,7 +33,7 @@ public class Member extends BaseTimeEntity {
 
     public void updateMember(MemberDto.UpdateMember updateMember) {
         this.passwd = StringUtils.hasText(updateMember.getPasswd()) ? updateMember.getPasswd() : this.passwd;
-        this.lineToken = updateMember.getLineToken();
-        this.email = updateMember.getEmail();
+        this.lineToken = StringUtils.hasText(updateMember.getLineToken()) ? updateMember.getLineToken() : this.lineToken;
+        this.email = StringUtils.hasText(updateMember.getEmail()) ? updateMember.getEmail() : this.email;
     }
 }

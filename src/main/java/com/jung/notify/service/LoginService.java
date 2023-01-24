@@ -1,6 +1,7 @@
 package com.jung.notify.service;
 
-import com.jung.notify.dto.MemberDto;
+import com.jung.notify.domain.Member;
+import com.jung.notify.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,11 +15,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginService implements UserDetailsService {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String insertedId) throws UsernameNotFoundException {
-        Optional<MemberDto.SelectMember> selectMember = memberService.findMemberById(insertedId);
+        Optional<Member> selectMember = memberRepository.findById(insertedId);
 
         if (!selectMember.isPresent()) {
             throw new UsernameNotFoundException(insertedId);

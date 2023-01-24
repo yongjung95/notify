@@ -13,6 +13,25 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
 
+    public void sendResetPasswd(String email, String resetPasswd) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+
+        try {
+            simpleMailMessage.setTo(email);
+
+            // 2. 메일 제목 설정
+            simpleMailMessage.setSubject("Notify 임시 패스워드 안내입니다.");
+
+            // 3. 메일 내용 설정
+            simpleMailMessage.setText("안녕하세요. Notify 임시 패스워드 안내입니다. 임시 패스워드는 [ " + resetPasswd + " ] 입니다.");
+
+            // 4. 메일 전송
+            javaMailSender.send(simpleMailMessage);
+        } catch (Exception e) {
+            log.info(e.toString());
+        }
+    }
+
     public void sendMail() {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 

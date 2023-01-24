@@ -45,12 +45,12 @@ public class MemberRepository {
         return Optional.ofNullable(queryFactory.select(member).from(member).where(member.id.eq(id).or(member.email.eq(email))).fetchOne());
     }
 
-    public Optional<Member> findByEmailAndNotUid(Long uid, String email) {
-        return Optional.ofNullable(queryFactory.select(member).from(member).where(member.email.eq(email).and(member.uid.ne(uid))).fetchOne());
+    public Member findByEmailAndNotUid(String email, Long uid) {
+        return queryFactory.select(member).from(member).where(member.email.eq(email).and(member.uid.ne(uid))).fetchOne();
     }
 
-    public Optional<Member> findByEmail(String email) {
-        return Optional.ofNullable(queryFactory.select(member).from(member).where(member.email.eq(email)).fetchOne());
+    public Member findByEmail(String email) {
+        return queryFactory.select(member).from(member).where(member.email.eq(email)).fetchOne();
     }
 
     public List<Member> findAllMember() {

@@ -18,5 +18,5 @@ public interface MemberMapper {
 
     List<MemberDto.SelectMember> membersToSelectMembers(List<Member> members);
 
-    MemberDto.UpdateMember memberToUpdateMember(Member member);
+    MemberDto.UpdateMember selectMemberToUpdateMember(MemberDto.SelectMember selectMember);
 }

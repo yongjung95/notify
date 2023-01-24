@@ -13,8 +13,6 @@ import java.util.List;
 @SpringBootTest
 @Transactional
 class MemberRepositoryTest {
-
-
     @Autowired
     private EntityManager em;
     @Autowired

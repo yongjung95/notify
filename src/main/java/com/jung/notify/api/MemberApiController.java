@@ -7,8 +7,6 @@ import com.jung.notify.common.StringUtil;
 import com.jung.notify.dto.MemberDto;
 import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,9 +23,6 @@ public class MemberApiController {
 
     private final ResponseService responseService;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
     @PostMapping("/v1/member")
     public SingleResult<?> member(@RequestBody MemberDto.SaveMember saveMember) {
         List<String> list = Arrays.asList(saveMember.getId(), saveMember.getPasswd(), saveMember.getEmail());
@@ -39,8 +34,6 @@ public class MemberApiController {
             return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
         }
 
-        saveMember.setPasswd(bCryptPasswordEncoder.encode(saveMember.getPasswd()));
-
         return memberService.saveMember(saveMember) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.DUPLICATION_MEMBER);
     }
 
@@ -50,12 +43,12 @@ public class MemberApiController {
             return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
         }
 
-        if(StringUtils.hasText(updateMember.getPasswd())) {
-            updateMember.setPasswd(bCryptPasswordEncoder.encode(updateMember.getPasswd()));
+        MemberDto.SelectMember selectMember = memberService.findByEmailAndNotUid(updateMember.getEmail(), updateMember.getUid());
+
+        if (selectMember != null){
+            return responseService.getFailResult(ErrorCode.DUPLICATION_MEMBER);
         }
 
-
-        return memberService.updateMember(updateMember) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.DUPLICATION_MEMBER);
-
+        return memberService.updateMember(updateMember) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
     }
 }

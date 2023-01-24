@@ -1,26 +1,40 @@
 package com.jung.notify.service;
 
-import com.jung.notify.common.Sha256;
 import com.jung.notify.domain.MemberRole;
 import com.jung.notify.dto.MemberDto;
+import com.jung.notify.mapper.MemberMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
+@Rollback(value = false)
 public class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    EntityManager em;
+
+    @Autowired
+    MailService mailService;
 
     @Test
     public void 회원_생성() {
@@ -28,7 +42,7 @@ public class MemberServiceTest {
         MemberDto.SaveMember saveMember = new MemberDto.SaveMember();
 
         saveMember.setId("wlswjd95");
-        saveMember.setPasswd(Sha256.encrypt("1234"));
+        saveMember.setPasswd("1234");
         saveMember.setEmail("wlswjd95@naver.com");
         saveMember.setMemberRole(MemberRole.MEMBER);
 
@@ -49,12 +63,23 @@ public class MemberServiceTest {
 
         saveMember.setId("wlswjd95");
         saveMember.setEmail("wlswjd95@naver.com");
-        saveMember.setPasswd(Sha256.encrypt("1234"));
+        saveMember.setPasswd("1234");
 
         boolean result = memberService.saveMember(saveMember);
 
         // then
         assertEquals(result, true);
+    }
+
+    @Test
+    public void 회원_패스워드_찾기() {
+        MemberDto.SelectMember selectMember = memberService.findMemberByEmail("wlswjd95@naver.com");
+
+        MemberDto.UpdateMember updateMember = MemberMapper.INSTANCE.selectMemberToUpdateMember(selectMember);
+
+        boolean result = memberService.resetPasswd(updateMember);
+
+        assertTrue(result);
     }
 
 }
