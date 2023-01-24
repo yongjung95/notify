@@ -51,7 +51,7 @@
                     </button>
                     <button th:if="${!item.isUse}" th:id="${item.id}" th:value="${item.isUse}"
                             class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;"
-                            th:onclick="stockManage(this.getAttribute('id'), '')">관심종목 추가
+                            th:onclick="stockManage(this.getAttribute('id'), this.getAttribute('value'))">관심종목 추가
                     </button>
                 </td>
             </tr>
@@ -85,7 +85,8 @@
 <script>
     function stockManage(stockId, isUse) {
 
-        console.log(stockId, isUse);
+        console.log(stockId);
+        console.log(isUse);
         $.ajax({
             type: "POST",
             url: "/v1/stock",
@@ -95,14 +96,15 @@
                 stockId: stockId
             }),
             success: function (res) {
-                if (res.code == 200) {
-                    if (isUse) {
-                        var elem = document.getElementById(stockId);
+                if (res.code === "200") {
+                    if (isUse === "true") {
                         $("#" + stockId).attr('class', 'btn btn-outline-primary btn-sm');
                         $("#" + stockId).text('관심종목 추가');
-                    }else {
+                        $("#" + stockId).attr('value', 'false');
+                    }else if(isUse === "false") {
                         $("#" + stockId).attr('class', 'btn btn-outline-danger btn-sm');
                         $("#" + stockId).text('관심종목 제거');
+                        $("#" + stockId).attr('value', 'true');
                     }
                 } else {
                     alert(res.message);

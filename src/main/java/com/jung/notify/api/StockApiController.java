@@ -53,8 +53,6 @@ public class StockApiController {
             return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
         }
 
-        stockService.saveStockManage(stockManageRequest.getStockId(), user.getUsername());
-
         return stockService.saveStockManage(stockManageRequest.getStockId(), user.getUsername()) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.STOCK_IS_NOT_FOUND);
     }
 }

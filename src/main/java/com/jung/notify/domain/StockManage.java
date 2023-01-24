@@ -27,6 +27,6 @@ public class StockManage extends BaseTimeEntity {
     private boolean isUse;
 
     public void changeIsUse() {
-        this.isUse = !this.isUse;
+        isUse = !isUse;
     }
 }
