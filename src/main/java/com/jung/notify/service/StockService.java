@@ -43,10 +43,14 @@ public class StockService {
         return stockRepository.selectStockList(corpName, pageable, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }
 
-    public void saveStockManage(Long stockId, String memberId) {
+    public boolean saveStockManage(Long stockId, String memberId) {
         MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
-        Stock stock = stockRepository.findById(stockId).orElseThrow(NullPointerException::new);
+        Stock stock = stockRepository.findById(stockId).orElseGet(null);
+
+        if (stock == null) {
+            return false;
+        }
 
         StockManage stockManage = StockManage.builder()
                 .stock(stock)
@@ -54,6 +58,8 @@ public class StockService {
                 .build();
 
         stockManageRepository.save(stockManage);
+
+        return true;
     }
 
     public Page<StockDto.SelectStock> selectStockManageList(Pageable pageable, String memberId) {

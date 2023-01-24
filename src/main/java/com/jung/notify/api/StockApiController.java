@@ -55,6 +55,6 @@ public class StockApiController {
 
         stockService.saveStockManage(stockManageRequest.getStockId(), user.getUsername());
 
-        return responseService.getSuccessResult();
+        return stockService.saveStockManage(stockManageRequest.getStockId(), user.getUsername()) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.STOCK_IS_NOT_FOUND);
     }
 }

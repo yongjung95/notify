@@ -21,6 +21,9 @@ public enum ErrorCode {
     DUPLICATION_KEYWORD(400,"K001","중복된 키워드 입니다."),
     KEYWORD_IS_NOT_FOUND(400,"K002","해당 키워드가 없습니다."),
 
+    // stock
+    STOCK_IS_NOT_FOUND(400, "S001", "주식 정보가 없습니다."),
+
     ;
     private final String code;
     private final String message;
