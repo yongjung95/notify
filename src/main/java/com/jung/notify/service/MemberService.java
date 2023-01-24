@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,9 +28,9 @@ public class MemberService {
     private final MailService mailService;
 
     public boolean saveMember(MemberDto.SaveMember saveMember) {
-        Optional<MemberDto.SelectMember> selectMember = findMemberByIdOrEmail(saveMember.getId(), saveMember.getEmail());
+        MemberDto.SelectMember selectMember = findMemberByIdOrEmail(saveMember.getId(), saveMember.getEmail());
 
-        if (selectMember.isPresent()) {
+        if (selectMember != null) {
             return false;
         }
 
@@ -99,12 +98,12 @@ public class MemberService {
         return memberRepository.findByUid(uid);
     }
 
-    public Optional<MemberDto.SelectMember> findMemberById(String id) {
-        return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findById(id).orElse(null)));
+    public MemberDto.SelectMember findMemberById(String id) {
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findById(id));
     }
 
-    public Optional<MemberDto.SelectMember> findMemberByIdOrEmail(String id, String email) {
-        return Optional.ofNullable(MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByIdOrEmail(id, email).orElse(null)));
+    public MemberDto.SelectMember findMemberByIdOrEmail(String id, String email) {
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByIdOrEmail(id, email));
     }
 
     public MemberDto.SelectMember findByEmailAndNotUid(String email, Long uid) {

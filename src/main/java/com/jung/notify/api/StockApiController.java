@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 @RequiredArgsConstructor
 public class StockApiController {
@@ -49,9 +47,9 @@ public class StockApiController {
             return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
         }
 
-        Optional<MemberDto.SelectMember> selectMember = memberService.findMemberById(user.getUsername());
+        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername());
 
-        if (!selectMember.isPresent()) {
+        if(selectMember == null) {
             return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
         }
 

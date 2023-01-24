@@ -35,7 +35,11 @@ public class TestApiController {
 
     @GetMapping("/v1/test/keyword")
     public SingleResult<?> keywordTest(@AuthenticationPrincipal User user){
-        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername()).orElseThrow(NullPointerException::new);
+        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername());
+
+        if(selectMember == null) {
+            return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
+        }
 
         if(StringUtil.isNullOrEmpty(selectMember.getLineToken())){
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
@@ -71,7 +75,11 @@ public class TestApiController {
 
     @GetMapping("/v1/test/keywords")
     public SingleResult<?> keywordsTest(@AuthenticationPrincipal User user){
-        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername()).orElseThrow(NullPointerException::new);
+        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername());
+
+        if(selectMember == null) {
+            return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
+        }
 
         if(StringUtil.isNullOrEmpty(selectMember.getLineToken())){
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);
@@ -80,7 +88,6 @@ public class TestApiController {
 
         List<String> keywords = new ArrayList<>();
 
-//        keywords.add("삼성전자");
         keywords.add("javascript");
 
         for (String keyword : keywords) {

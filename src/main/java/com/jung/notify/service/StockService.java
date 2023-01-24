@@ -38,13 +38,13 @@ public class StockService {
     private final StockManageRepository stockManageRepository;
 
     public Page<StockDto.SelectStock> selectStockList(String corpName, Pageable pageable, String memberId) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
         return stockRepository.selectStockList(corpName, pageable, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }
 
     public void saveStockManage(Long stockId, String memberId) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
         Stock stock = stockRepository.findById(stockId).orElseThrow(NullPointerException::new);
 
@@ -57,7 +57,7 @@ public class StockService {
     }
 
     public Page<StockDto.SelectStock> selectStockManageList(Pageable pageable, String memberId) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
         return stockManageRepository.selectStockManageList(pageable, MemberMapper.INSTANCE.selectMemberToMember(selectMember));
     }

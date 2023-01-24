@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static com.jung.notify.domain.QMember.member;
 
@@ -31,18 +30,15 @@ public class MemberRepository {
     }
 
     public Member findByUid(Long uid) {
-//        return em.find(Member.class, uid);
-
         return queryFactory.selectFrom(member).where(member.uid.eq(uid)).fetchOne();
     }
 
-    public Optional<Member> findById(String id) {
-//        List<Member> members = em.createQuery("select m from Member m where m.id = :id", Member.class).setParameter("id", id).getResultList();
-        return Optional.ofNullable(queryFactory.select(member).from(member).where(member.id.eq(id)).fetchOne());
+    public Member findById(String id) {
+        return queryFactory.select(member).from(member).where(member.id.eq(id)).fetchOne();
     }
 
-    public Optional<Member> findByIdOrEmail(String id, String email) {
-        return Optional.ofNullable(queryFactory.select(member).from(member).where(member.id.eq(id).or(member.email.eq(email))).fetchOne());
+    public Member findByIdOrEmail(String id, String email) {
+        return queryFactory.select(member).from(member).where(member.id.eq(id).or(member.email.eq(email))).fetchOne();
     }
 
     public Member findByEmailAndNotUid(String email, Long uid) {

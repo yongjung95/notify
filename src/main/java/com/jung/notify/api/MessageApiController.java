@@ -35,7 +35,11 @@ public class MessageApiController {
 
     @PostMapping("/v1/message")
     public SingleResult<?> message(@AuthenticationPrincipal User user){
-        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername()).orElseThrow(NullPointerException::new);
+        MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername());
+
+        if(selectMember == null) {
+            return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
+        }
 
         if(StringUtil.isNullOrEmpty(selectMember.getLineToken())){
             return responseService.getFailResult(ErrorCode.LINE_TOKEN_IS_NOT_FOUND);

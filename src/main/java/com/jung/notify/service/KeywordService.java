@@ -32,7 +32,7 @@ public class KeywordService {
     private final MessageService messageService;
 
     public KeywordDto.SelectKeyword saveKeyword(KeywordDto.SaveKeywordDto saveKeywordDto) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(saveKeywordDto.getMemberId()).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(saveKeywordDto.getMemberId());
 
         Optional<KeywordDto.SelectKeyword> findKeyword = findOneByKeyword(saveKeywordDto.getKeyword(), saveKeywordDto.getMemberId());
 
@@ -51,19 +51,19 @@ public class KeywordService {
     }
 
     public Optional<KeywordDto.SelectKeyword> findOne(Long id, String memberId) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
         return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOne(id, MemberMapper.INSTANCE.selectMemberToMember(selectMember)).orElse(null)));
     }
 
     public Optional<KeywordDto.SelectKeyword> findOneByKeyword(String keyword, String memberId) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
         return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOneByKeyword(keyword, MemberMapper.INSTANCE.selectMemberToMember(selectMember)).orElse(null)));
     }
 
     public List<KeywordDto.SelectKeyword> findAllByMember(String memberId) {
-        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId).orElseThrow(NullPointerException::new); // 커스텀 Exception 을 터뜨리면 될 듯.
+        MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
         return KeywordMapper.INSTANCE.keywordsToSelectKeywords(keywordRepository.findAllByMember(MemberMapper.INSTANCE.selectMemberToMember(selectMember)));
     }
