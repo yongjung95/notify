@@ -16,7 +16,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +33,13 @@ public class KeywordService {
     public KeywordDto.SelectKeyword saveKeyword(KeywordDto.SaveKeywordDto saveKeywordDto) {
         MemberDto.SelectMember selectMember = memberService.findMemberById(saveKeywordDto.getMemberId());
 
-        Optional<KeywordDto.SelectKeyword> findKeyword = findOneByKeyword(saveKeywordDto.getKeyword(), saveKeywordDto.getMemberId());
+        if (selectMember == null) {
+            return null;
+        }
 
-        if (findKeyword.isPresent()) {
+        KeywordDto.SelectKeyword findKeyword = findOneByKeyword(saveKeywordDto.getKeyword(), saveKeywordDto.getMemberId());
+
+        if (findKeyword != null) {
             return null;
         }
 
@@ -50,16 +53,16 @@ public class KeywordService {
         return KeywordMapper.INSTANCE.keywordToSelectKeyword(keyword);
     }
 
-    public Optional<KeywordDto.SelectKeyword> findOne(Long id, String memberId) {
+    public KeywordDto.SelectKeyword findOne(Long id, String memberId) {
         MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
-        return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOne(id, MemberMapper.INSTANCE.selectMemberToMember(selectMember)).orElse(null)));
+        return KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOne(id, MemberMapper.INSTANCE.selectMemberToMember(selectMember)));
     }
 
-    public Optional<KeywordDto.SelectKeyword> findOneByKeyword(String keyword, String memberId) {
+    public KeywordDto.SelectKeyword findOneByKeyword(String keyword, String memberId) {
         MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
 
-        return Optional.ofNullable(KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOneByKeyword(keyword, MemberMapper.INSTANCE.selectMemberToMember(selectMember)).orElse(null)));
+        return KeywordMapper.INSTANCE.keywordToSelectKeyword(keywordRepository.findOneByKeyword(keyword, MemberMapper.INSTANCE.selectMemberToMember(selectMember)));
     }
 
     public List<KeywordDto.SelectKeyword> findAllByMember(String memberId) {

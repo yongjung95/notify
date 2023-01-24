@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static com.jung.notify.domain.QKeyword.keyword1;
 import static com.jung.notify.domain.QMember.member;
@@ -29,29 +28,25 @@ public class KeywordRepository {
         em.persist(keyword);
     }
 
-    public Optional<Keyword> findOne(Long id, Member searchMember){
-//        List<Keyword> keywords = em.createQuery("select k from Keyword k where k.id = :id and k.member = :member", Keyword.class).setParameter("id", id).setParameter("member", member).getResultList();
-
-        return Optional.ofNullable(queryFactory
+    public Keyword findOne(Long id, Member searchMember){
+        return queryFactory
                 .select(keyword1)
                 .from(keyword1)
                 .leftJoin(keyword1.member, member)
                 .where(keyword1.id.eq(id)
                         .and(member.eq(searchMember))
-                ).fetchOne());
+                ).fetchOne();
     }
 
-    public Optional<Keyword> findOneByKeyword(String keyword, Member member){
-        List<Keyword> keywords = em.createQuery("select k from Keyword k where k.keyword = :keyword and k.member =:member", Keyword.class)
-                .setParameter("keyword", keyword)
-                .setParameter("member", member)
-                .getResultList();
-
-        return keywords.stream().findAny();
+    public Keyword findOneByKeyword(String keyword, Member searchMember){
+        return queryFactory.select(keyword1)
+                .from(keyword1)
+                .where(keyword1.member.eq(searchMember)
+                        .and(keyword1.keyword.eq(keyword)))
+                .fetchOne();
     }
+
     public List<Keyword> findAllByMember(Member searchMember){
-//        return em.createQuery("select k from Keyword k join fetch k.member where k.member = :member", Keyword.class).setParameter("member", member).getResultList();
-
         return queryFactory
                 .select(keyword1)
                 .from(keyword1)

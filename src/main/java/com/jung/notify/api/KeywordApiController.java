@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,13 +35,13 @@ public class KeywordApiController {
         List<KeywordDto.SelectKeyword> deleteKeywords = new ArrayList<>();
 
         for (Long keywordId : removeKeywordDto.getKeywordId()) {
-            Optional<KeywordDto.SelectKeyword> selectKeyword = keywordService.findOne(keywordId, user.getUsername());
+            KeywordDto.SelectKeyword selectKeyword = keywordService.findOne(keywordId, user.getUsername());
 
-            if (!selectKeyword.isPresent()) {
+            if (selectKeyword == null) {
                 return responseService.getFailResult(ErrorCode.KEYWORD_IS_NOT_FOUND);
             }
 
-            deleteKeywords.add(selectKeyword.get());
+            deleteKeywords.add(selectKeyword);
         }
 
         if (!deleteKeywords.isEmpty()) {
