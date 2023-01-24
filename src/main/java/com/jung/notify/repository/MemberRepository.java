@@ -49,8 +49,12 @@ public class MemberRepository {
         return queryFactory.select(member).from(member).where(member.email.eq(email).and(member.uid.ne(uid))).fetchOne();
     }
 
-    public Member findByEmail(String email) {
+    public Member findMemberByEmail(String email) {
         return queryFactory.select(member).from(member).where(member.email.eq(email)).fetchOne();
+    }
+
+    public Member findMemberByIdAndEmail(String id, String email) {
+        return queryFactory.select(member).from(member).where(member.id.eq(id).and(member.email.eq(email))).fetchOne();
     }
 
     public List<Member> findAllMember() {

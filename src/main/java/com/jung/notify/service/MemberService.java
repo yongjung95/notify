@@ -87,7 +87,12 @@ public class MemberService {
     }
 
     public MemberDto.SelectMember findMemberByEmail(String email) {
-        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findByEmail(email));
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findMemberByEmail(email));
+
+    }
+
+    public MemberDto.SelectMember findMemberByIdAndEmail(String id, String email) {
+        return MemberMapper.INSTANCE.memberToSelectMember(memberRepository.findMemberByIdAndEmail(id, email));
     }
 
     public Member findMemberByUid(Long uid) {

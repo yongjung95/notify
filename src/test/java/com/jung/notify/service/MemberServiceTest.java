@@ -73,7 +73,7 @@ public class MemberServiceTest {
 
     @Test
     public void 회원_패스워드_찾기() {
-        MemberDto.SelectMember selectMember = memberService.findMemberByEmail("wlswjd95@naver.com");
+        MemberDto.SelectMember selectMember = memberService.findMemberByIdAndEmail("wlswjd95", "wlswjd95@naver.com");
 
         MemberDto.UpdateMember updateMember = MemberMapper.INSTANCE.selectMemberToUpdateMember(selectMember);
 

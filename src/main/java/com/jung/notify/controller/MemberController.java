@@ -27,11 +27,15 @@ public class MemberController {
         return "member/createMemberForm";
     }
 
+    @GetMapping("/member/find")
+    public String findMember() {
+        return "member/findMember";
+    }
+
     @GetMapping("/member")
     public String member(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("member", memberService.findMemberById(user.getUsername()));
 
         return "member/myPage";
     }
-
 }
