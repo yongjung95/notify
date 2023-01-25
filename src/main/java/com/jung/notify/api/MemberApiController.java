@@ -3,19 +3,18 @@ package com.jung.notify.api;
 import com.jung.notify.api.response.error.ErrorCode;
 import com.jung.notify.api.response.model.SingleResult;
 import com.jung.notify.api.response.service.ResponseService;
-import com.jung.notify.common.StringUtil;
 import com.jung.notify.dto.MemberDto;
 import com.jung.notify.mapper.MemberMapper;
 import com.jung.notify.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,23 +25,22 @@ public class MemberApiController {
     private final ResponseService responseService;
 
     @PostMapping("/v1/member")
-    public SingleResult<?> member(@RequestBody MemberDto.SaveMember saveMember) {
-        List<String> list = Arrays.asList(saveMember.getId(), saveMember.getPasswd(), saveMember.getEmail());
-
-        if (list.stream().anyMatch(StringUtil::isNullOrEmpty))
-            return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
-
-        if (!memberService.checkEmail(saveMember.getEmail())) {
-            return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
+    public SingleResult<?> member(@RequestBody @Valid MemberDto.SaveMember saveMember, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
         }
 
         return memberService.saveMember(saveMember) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.DUPLICATION_MEMBER);
     }
 
     @PutMapping("/v1/member")
-    public SingleResult<?> memberUpdate(@RequestBody MemberDto.UpdateMember updateMember) {
-        if (!memberService.checkEmail(updateMember.getEmail())) {
-            return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
+    public SingleResult<?> memberUpdate(@RequestBody @Valid MemberDto.UpdateMember updateMember, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
         }
 
         MemberDto.SelectMember selectMember = memberService.findByEmailAndNotUid(updateMember.getEmail(), updateMember.getUid());
@@ -55,12 +53,14 @@ public class MemberApiController {
     }
 
     @PostMapping("/v1/member/id")
-    public SingleResult<?> findMemberId(@RequestBody MemberDto.SelectMember selectMember) {
-        if (!memberService.checkEmail(selectMember.getEmail())) {
-            return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
+    public SingleResult<?> findMemberId(@RequestBody @Valid MemberDto.SearchMemberId searchMemberId, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
         }
 
-        MemberDto.SelectMember findMember = memberService.findMemberByEmail(selectMember.getEmail());
+        MemberDto.SelectMember findMember = memberService.findMemberByEmail(searchMemberId.getEmail());
 
         if (findMember == null) {
             return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);
@@ -70,16 +70,14 @@ public class MemberApiController {
     }
 
     @PostMapping("/v1/member/passwd")
-    public SingleResult<?> findMemberPasswd(@RequestBody MemberDto.SelectMember selectMember) {
-        if (!StringUtils.hasText(selectMember.getId()) || !StringUtils.hasText(selectMember.getEmail())) {
-            return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
+    public SingleResult<?> findMemberPasswd(@RequestBody @Valid MemberDto.SearchMemberPw searchMemberPw, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
         }
 
-        if (!memberService.checkEmail(selectMember.getEmail())) {
-            return responseService.getFailResult(ErrorCode.NOT_EMAIL_PATTERN);
-        }
-
-        MemberDto.SelectMember findMember = memberService.findMemberByIdAndEmail(selectMember.getId(), selectMember.getEmail());
+        MemberDto.SelectMember findMember = memberService.findMemberByIdAndEmail(searchMemberPw.getId(), searchMemberPw.getEmail());
 
         if (findMember == null) {
             return responseService.getFailResult(ErrorCode.MEMBER_IS_NOT_FOUND);

@@ -78,6 +78,15 @@ public class ResponseService {
         return result;
     }
 
+    public <T> SingleResult<T> getFailParameter(String message) {
+        SingleResult<T> result = new SingleResult<>();
+
+        result.setStatus(400);
+        result.setMessage(message);
+
+        return result;
+    }
+
     public <T> ListResult<T> getFailListResult(ErrorCode errorCode) {
         ListResult<T> result = new ListResult<>();
 //        result.setSuccess(false);
