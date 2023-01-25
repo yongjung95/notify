@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/", true)
                 .failureForwardUrl("/loginError")
         ;
+        http.logout()
+                .deleteCookies("JSESSIONID");
     }
 
     @Override
