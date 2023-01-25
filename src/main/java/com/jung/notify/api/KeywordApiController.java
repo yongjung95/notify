@@ -8,11 +8,14 @@ import com.jung.notify.service.KeywordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +27,26 @@ public class KeywordApiController {
     private final ResponseService responseService;
 
     @PostMapping("/v1/keyword")
-    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody KeywordDto.SaveKeywordDto saveKeywordDto) {
+    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody @Valid KeywordDto.SaveKeywordDto saveKeywordDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
+        }
+
         saveKeywordDto.setMemberId(user.getUsername());
 
         return responseService.getSingleResult(keywordService.saveKeyword(saveKeywordDto));
     }
 
     @DeleteMapping("/v1/keyword")
-    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody KeywordDto.RemoveKeywordDto removeKeywordDto) {
+    public SingleResult<?> keyword(@AuthenticationPrincipal User user, @RequestBody @Valid KeywordDto.RemoveKeywordDto removeKeywordDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
+        }
+
         List<KeywordDto.SelectKeyword> deleteKeywords = new ArrayList<>();
 
         for (Long keywordId : removeKeywordDto.getKeywordId()) {
