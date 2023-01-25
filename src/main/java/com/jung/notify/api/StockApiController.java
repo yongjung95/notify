@@ -10,9 +10,13 @@ import com.jung.notify.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,11 +44,11 @@ public class StockApiController {
 //    }
 
     @PostMapping("/v1/stock")
-    public SingleResult<?> stock(@AuthenticationPrincipal User user, @RequestBody StockDto.StockManageRequest stockManageRequest) {
-        System.out.println(stockManageRequest);
-
-        if (stockManageRequest.getStockId() == null) {
-            return responseService.getFailResult(ErrorCode.PARAMETER_IS_EMPTY);
+    public SingleResult<?> stock(@AuthenticationPrincipal User user, @RequestBody @Valid StockDto.StockManageRequest stockManageRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                return responseService.getFailParameter(allError.getDefaultMessage());
+            }
         }
 
         MemberDto.SelectMember selectMember = memberService.findMemberById(user.getUsername());

@@ -4,6 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 public class StockDto {
 
     @Data
@@ -35,6 +37,7 @@ public class StockDto {
 
     @Data
     public static class StockManageRequest {
+        @NotNull(message = "종목을 선택해주세요.")
         private Long stockId;
     }
 
