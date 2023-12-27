@@ -31,7 +31,7 @@ jobs:
         java-version: 1.8
 
     - name: Make gradlew executable
-      run: chmod +x /home/ubuntu/actions-runner/_work/notify/notify/gradlew
+      run: chmod +x /home/ubuntu/actions-runner/notify_work/notify/notify/gradlew
 
     - name: Properties File Copy
       run: cp /home/ubuntu/notify/application-real.properties /home/ubuntu/actions-runner/_work/notify/notify/src/main/resources/application-real.properties
