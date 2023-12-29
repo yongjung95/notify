@@ -27,6 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.jsoup:jsoup:1.14.2'
+	implementation 'ch.qos.logback:logback-classic:1.2.3'
 
 	implementation 'junit:junit:4.13.1'
 
