@@ -4,19 +4,21 @@ import com.jung.notify.domain.Member;
 import com.jung.notify.domain.Stock;
 import com.jung.notify.domain.StockManage;
 import com.jung.notify.dto.StockDto;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
 @SpringBootTest
 @Transactional
+@Slf4j
 class StockServiceTest {
 
     @Autowired
@@ -38,8 +40,7 @@ class StockServiceTest {
         }
     }
 
-
-    @BeforeEach
+//    @BeforeEach
     public void before() {
         Member member1 = Member.builder().id("member1").build();
         Member member2 = Member.builder().id("member2").build();
@@ -137,5 +138,16 @@ class StockServiceTest {
             System.out.println(selectStock);
         }
 
+    }
+
+    @Test
+    @Rollback(false)
+    public void 토큰_발급_테스트() {
+        log.info("token : {}", stockService.getStockApiToken());
+    }
+
+    @Test
+    public void 메시지_발송_테스트() {
+        stockService.sendMorningStockPriceList(false);
     }
 }

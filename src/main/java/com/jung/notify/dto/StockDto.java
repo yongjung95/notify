@@ -50,6 +50,7 @@ public class StockDto {
         private String openPrice; // 시가
         private String compareDayPoint; // 전일 대비 포인트
         private String compareDayPercent; // 전일 대비 퍼센트
+        private String compareDaySign; // 전일 대비 부호 [1 : 상한, 2: 상승, 3: 보합, 4: 하한, 5: 하락]
     }
 
     @Data

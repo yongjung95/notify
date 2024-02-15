@@ -29,6 +29,7 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.14.2'
 	implementation 'ch.qos.logback:logback-classic:1.2.3'
 
+
 	implementation 'junit:junit:4.13.1'
 
     compileOnly 'org.projectlombok:lombok'
@@ -62,6 +63,9 @@ dependencies {
 	testImplementation("org.junit.vintage:junit-vintage-engine") {
 		exclude group: "org.hamcrest", module: "hamcrest-core"
 	}
+
+	testCompileOnly 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
 }
 
 test {
