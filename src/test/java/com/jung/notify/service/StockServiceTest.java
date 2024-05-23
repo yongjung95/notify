@@ -143,7 +143,7 @@ class StockServiceTest {
     @Test
     @Rollback(false)
     public void 토큰_발급_테스트() {
-        log.info("token : {}", stockService.getStockApiToken());
+        log.info("token : {}", stockService.getStockApiInfo());
     }
 
     @Test

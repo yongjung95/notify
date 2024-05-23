@@ -1,15 +1,13 @@
 package com.jung.notify.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class StockApiInfo {
@@ -22,4 +20,6 @@ public class StockApiInfo {
     private String token;
 
     private String issueDate;
+
+    private Boolean opndYn;
 }

@@ -26,9 +26,10 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -52,11 +53,6 @@ public class StockService {
 
     @Value("${korea.stock.appsecret}")
     private String appSecret;
-
-    @Value("${korea.stock.tr_id}")
-    private String trId;
-
-
 
     public Page<StockDto.SelectStock> selectStockList(String corpName, Pageable pageable, String memberId) {
         MemberDto.SelectMember selectMember = memberService.findMemberById(memberId);
@@ -155,8 +151,11 @@ public class StockService {
         }
     }
 
-    public String getStockApiToken() {
-        String today = String.valueOf(LocalDate.now());
+    public StockApiInfo getStockApiInfo() {
+        Date date = new Date();
+        SimpleDateFormat todayFormat = new SimpleDateFormat("yyyyMMdd");
+
+        String today = todayFormat.format(date);
 
         StockApiInfo findStockApiInfo = stockApiInfoRepository.findByDate(today);
 
@@ -182,31 +181,64 @@ public class StockService {
 
             JSONObject result = new JSONObject(resultMap.getBody());
 
+            String accessToken = "Bearer " + result.getString("access_token");
 
             StockApiInfo stockApiInfo = StockApiInfo.builder()
-                    .token("Bearer " + result.getString("access_token"))
+                    .token(accessToken)
                     .issueDate(today)
+                    .opndYn(getOpndToken(accessToken))
                     .build();
 
             stockApiInfoRepository.save(stockApiInfo);
 
-            return stockApiInfo.getToken();
+            return stockApiInfo;
         }
 
-        return findStockApiInfo.getToken();
-
+        return findStockApiInfo;
     }
 
-    private JSONObject getStockInfo(String stockCode) {
-        String apiURL = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=" + stockCode;    // json 결과
+    public boolean getOpndToken(String accessToken) {
+        Date date = new Date();
+        SimpleDateFormat todayFormat = new SimpleDateFormat("yyyyMMdd");
+
+        String today = todayFormat.format(date);
+
+        String apiURL = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/chk-holiday?" +
+                "CTX_AREA_FK=&CTX_AREA_NK=&BASS_DT=" + today;
 
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
-        header.set("Authorization", getStockApiToken());
+        header.set("Authorization", accessToken);
         header.set("appkey", appKey);
         header.set("appsecret", appSecret);
-        header.set("tr_id", trId);
+        header.set("tr_id", "CTCA0903R");
+
+        HttpEntity<?> entity = new HttpEntity<>(header);
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(apiURL).build();
+
+        ResponseEntity<String> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+
+        JSONObject jsonObject = new JSONObject(resultMap.getBody());
+
+        String opndYn = jsonObject.getJSONArray("output").getJSONObject(0).getString("opnd_yn");
+
+        return opndYn.equals("Y");
+
+    }
+
+    public JSONObject getStockInfo(String stockCode) {
+        String apiURL = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price?" +
+                "FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=" + stockCode;    // json 결과
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.set("Authorization", getStockApiInfo().getToken());
+        header.set("appkey", appKey);
+        header.set("appsecret", appSecret);
+        header.set("tr_id", "FHKST01010100");
 
         HttpEntity<?> entity = new HttpEntity<>(header);
 
@@ -218,5 +250,4 @@ public class StockService {
 
         return jsonObject.getJSONObject("output");
     }
-
 }

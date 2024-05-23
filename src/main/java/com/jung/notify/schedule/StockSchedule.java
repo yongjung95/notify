@@ -11,18 +11,16 @@ public class StockSchedule {
 
     private final StockService stockService;
 
-    private final HolidaySchedule holidaySchedule;
-
     @Scheduled(cron = "0 1 9 1/1 * MON-FRI", zone = "GMT+9:00")
     public void morningStockScheduleV1() {
-        if (!holidaySchedule.isIsHoliday()) {
+        if (stockService.getStockApiInfo().getOpndYn()) {
             stockService.sendMorningStockPriceList(true);
         }
     }
 
     @Scheduled(cron = "0 31 15 1/1 * MON-FRI", zone = "GMT+9:00")
     public void eveningScheduleV1() {
-        if (!holidaySchedule.isIsHoliday()) {
+        if (stockService.getStockApiInfo().getOpndYn()) {
             stockService.sendMorningStockPriceList(false);
         }
     }
