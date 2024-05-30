@@ -3,6 +3,7 @@ package com.jung.notify.api;
 import com.jung.notify.api.response.error.ErrorCode;
 import com.jung.notify.api.response.model.SingleResult;
 import com.jung.notify.api.response.service.ResponseService;
+import com.jung.notify.domain.StockApiInfo;
 import com.jung.notify.dto.MemberDto;
 import com.jung.notify.dto.StockDto;
 import com.jung.notify.service.MemberService;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,5 +60,12 @@ public class StockApiController {
         }
 
         return stockService.saveStockManage(stockManageRequest.getStockId(), user.getUsername()) ? responseService.getSuccessResult() : responseService.getFailResult(ErrorCode.STOCK_IS_NOT_FOUND);
+    }
+
+    @GetMapping("/v1/stock/info")
+    public SingleResult<?> stockInfo() {
+        StockApiInfo stockApiInfo = stockService.getStockApiInfo();
+
+        return responseService.getSingleResult(stockApiInfo.getToken());
     }
 }
