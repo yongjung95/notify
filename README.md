@@ -1,4 +1,4 @@
-# Notify DashBoard (최신화 2024/05/24)
+# Notify DashBoard (최신화 2024/06/06)
 
 ### 업데이트 내역
 - 2024.02.15
@@ -6,6 +6,8 @@
   - 주식 종목 최신화(2024/02/15, 출처 : KRX정보데이터시스템)
 - 2024.05.24
   - 주식 종목 자동 업데이트 추가 [stock-batch](https://github.com/yongjung95/stock-batch)
+- 2024.06.06
+  - SSL 인증서 추가
   
 ### 주소
 - http://notify.n-e.kr
