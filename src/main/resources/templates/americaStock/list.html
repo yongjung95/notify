@@ -18,14 +18,14 @@
 
     <div class="jumbotron">
         <h1>Notify</h1>
-        <p class="lead">해외주식 정보 설정</p>
-        <p>주식 정보는 매일 아침 9시와 오후 3시 30분에 발송됩니다.</p>
+        <p class="lead">미국주식 정보 설정</p>
+        <p>주식 정보는 매일 아침 9시와 저녁 10시 30분에 발송됩니다.</p>
 
         <div class="input-group mb-3" style="display: inline-block;">
-            <form th:object="${selectWorldStockRequest}">
+            <form th:object="${selectAmericaStockRequest}">
                 <input class="form-control" type="text" th:field="*{koreanName}" style="display: inline; width: 50%"/>
                 <button class="btn btn-outline-success btn-sm" style="padding: 0.25rem 0.5rem; font-size: 1.2rem;">검색</button>
-                <button class="btn btn-outline-info btn-sm" onclick="location.href='/stock/manage'" style="padding: 0.25rem 0.5rem; font-size: 1.2rem;" type="button">내 관심목록</button>
+                <button class="btn btn-outline-info btn-sm" onclick="location.href='/america-stock/manage'" style="padding: 0.25rem 0.5rem; font-size: 1.2rem;" type="button">내 관심목록</button>
             </form>
 
         </div>
@@ -48,16 +48,16 @@
                 <td th:text="${item.symbol}"></td>
                 <td th:text="${item.exchange}"></td>
                 <td th:text="${item.koreanName}"></td>
-                <!--<td>
+                <td>
                     <button th:if="${item.isUse}" th:id="${item.id}" th:value="${item.isUse}"
                             class="btn btn-outline-danger btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;"
-                            th:onclick="stockManage(this.getAttribute('id'), this.getAttribute('value'))">관심종목 제거
+                            th:onclick="americaStockManage(this.getAttribute('id'), this.getAttribute('value'))">관심종목 제거
                     </button>
                     <button th:if="${!item.isUse}" th:id="${item.id}" th:value="${item.isUse}"
                             class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;"
-                            th:onclick="stockManage(this.getAttribute('id'), this.getAttribute('value'))">관심종목 추가
+                            th:onclick="americaStockManage(this.getAttribute('id'), this.getAttribute('value'))">관심종목 추가
                     </button>
-                </td>-->
+                </td>
             </tr>
             </tbody>
         </table>
@@ -67,16 +67,16 @@
                   end=(${(data.getData().getTotalPages() == 0) ? 1 : (start + (10 - 1) < data.getData().getTotalPages() ? start + (10 - 1) : data.getData().getTotalPages())})">
             <ul class="pagination justify-content-center">
                 <li th:attr="class=${data.getData().getPageable().getPageNumber() < 10 ? 'page-item disabled' : 'page-item'}">
-                    <a class="page-link" th:href="@{/world-stock(page = ${start - 10})}">Previous</a>
+                    <a class="page-link" th:href="@{/america-stock(page = ${start - 10})}">Previous</a>
                 </li>
                 <li th:each="page, status : ${#numbers.sequence(start, end)}"
                     th:attr="class=${data.getData().getPageable().getPageNumber() == page -1 ? 'page-item active' :'page-item'}">
                     <a class="page-link"
-                       th:href="@{/world-stock(page = ${page - 1}, koreanName = ${selectWorldStockRequest.getKoreanName()})} "
+                       th:href="@{/america-stock(page = ${page - 1}, koreanName = ${selectAmericaStockRequest.getKoreanName()})} "
                        th:text="${page}"></a>
                 </li>
                 <li th:attr="class=${end < data.getData().getTotalPages() ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link" th:href="@{/world-stock(page = ${start + 10})}">Next</a>
+                    <a class="page-link" th:href="@{/america-stock(page = ${start + 10})}">Next</a>
                 </li>
             </ul>
         </nav>
@@ -87,28 +87,26 @@
 
 </div> <!-- /container -->
 <script>
-    function stockManage(stockId, isUse) {
+    function americaStockManage(americaStockId, isUse) {
 
-        console.log(stockId);
-        console.log(isUse);
         $.ajax({
             type: "POST",
-            url: "/v1/stock",
+            url: "/v1/america-stock",
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify({
-                stockId: stockId
+                americaStockId: americaStockId
             }),
             success: function (res) {
                 if (res.code === "200") {
                     if (isUse === "true") {
-                        $("#" + stockId).attr('class', 'btn btn-outline-primary btn-sm');
-                        $("#" + stockId).text('관심종목 추가');
-                        $("#" + stockId).attr('value', 'false');
+                        $("#" + americaStockId).attr('class', 'btn btn-outline-primary btn-sm');
+                        $("#" + americaStockId).text('관심종목 추가');
+                        $("#" + americaStockId).attr('value', 'false');
                     }else if(isUse === "false") {
-                        $("#" + stockId).attr('class', 'btn btn-outline-danger btn-sm');
-                        $("#" + stockId).text('관심종목 제거');
-                        $("#" + stockId).attr('value', 'true');
+                        $("#" + americaStockId).attr('class', 'btn btn-outline-danger btn-sm');
+                        $("#" + americaStockId).text('관심종목 제거');
+                        $("#" + americaStockId).attr('value', 'true');
                     }
                 } else {
                     alert(res.message);
