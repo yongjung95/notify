@@ -47,7 +47,7 @@
                 <td th:text="${data.getData().getPageable().getPageNumber() * 10 + itemStat.index + 1}"></td>
                 <td th:text="${item.symbol}"></td>
                 <td th:text="${item.exchange}"></td>
-                <td th:text="${item.koreanName}"></td>
+                <td th:text="${#strings.isEmpty(item.koreanName) ? item.englishName : item.koreanName}"></td>
                 <td>
                     <button th:if="${item.isUse}" th:id="${item.id}" th:value="${item.isUse}"
                             class="btn btn-outline-danger btn-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem;"

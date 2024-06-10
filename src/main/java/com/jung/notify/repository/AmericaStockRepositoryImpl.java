@@ -4,12 +4,17 @@ import com.jung.notify.domain.Member;
 import com.jung.notify.dto.AmericaStockDto;
 import com.jung.notify.dto.QAmericaStockDto_SelectAmericaStock;
 import com.jung.notify.dto.QAmericaStockDto_SelectAmericaStockManageMember;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.jung.notify.domain.QAmericaStock.americaStock;
@@ -30,6 +35,9 @@ public class AmericaStockRepositoryImpl implements AmericaStockRepositoryQueryds
 
     @Override
     public Page<AmericaStockDto.SelectAmericaStock> selectAmericaStockList(String koreanName, Pageable pageable, Member searchMember) {
+
+        List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable);
+
         List<AmericaStockDto.SelectAmericaStock> results = queryFactory
                 .select(new QAmericaStockDto_SelectAmericaStock(
                         americaStock.id,
@@ -45,6 +53,7 @@ public class AmericaStockRepositoryImpl implements AmericaStockRepositoryQueryds
                 .on(americaStock.id.eq(americaStockManage.americaStock.id)
                         .and(americaStockManage.member.eq(searchMember)))
                 .where(americaStock.koreanName.contains(koreanName))
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -73,5 +82,22 @@ public class AmericaStockRepositoryImpl implements AmericaStockRepositoryQueryds
                         .and(americaStockManage.member.eq(searchMember)
                         ))
                 .fetch();
+    }
+
+    private List<OrderSpecifier<?>> getOrderSpecifiers(Pageable pageable) {
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+
+        if (pageable.getSort().isSorted()) {
+            for (Sort.Order order : pageable.getSort()) {
+                PathBuilder<Object> pathBuilder = new PathBuilder<>(americaStock.getType(), americaStock.getMetadata());
+                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
+                        order.isAscending() ? Order.ASC : Order.DESC
+                        , pathBuilder.getString(order.getProperty())
+                );
+                orderSpecifiers.add(orderSpecifier);
+            }
+        }
+
+        return orderSpecifiers;
     }
 }

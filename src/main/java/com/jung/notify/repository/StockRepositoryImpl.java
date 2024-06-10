@@ -4,12 +4,17 @@ import com.jung.notify.domain.Member;
 import com.jung.notify.dto.QStockDto_SelectStock;
 import com.jung.notify.dto.QStockDto_SelectStockManageMember;
 import com.jung.notify.dto.StockDto;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.jung.notify.domain.QMember.member;
@@ -29,6 +34,8 @@ public class StockRepositoryImpl implements StockRepositoryQuerydsl {
 
 
     public Page<StockDto.SelectStock> selectStockList(String corpName, Pageable pageable, Member searchMember) {
+        List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable);
+
         List<StockDto.SelectStock> results = queryFactory
                 .select(new QStockDto_SelectStock(
                         stock.id,
@@ -43,6 +50,7 @@ public class StockRepositoryImpl implements StockRepositoryQuerydsl {
                 .on(stock.id.eq(stockManage.stock.id)
                         .and(stockManage.member.eq(searchMember)))
                 .where(stock.corpName.contains(corpName))
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -70,6 +78,23 @@ public class StockRepositoryImpl implements StockRepositoryQuerydsl {
                         .and(stockManage.member.eq(searchMember)
                         ))
                 .fetch();
+    }
+
+    private List<OrderSpecifier<?>> getOrderSpecifiers(Pageable pageable) {
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+
+        if (pageable.getSort().isSorted()) {
+            for (Sort.Order order : pageable.getSort()) {
+                PathBuilder<Object> pathBuilder = new PathBuilder<>(stock.getType(), stock.getMetadata());
+                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
+                        order.isAscending() ? Order.ASC : Order.DESC
+                        , pathBuilder.getString(order.getProperty())
+                );
+                orderSpecifiers.add(orderSpecifier);
+            }
+        }
+
+        return orderSpecifiers;
     }
 
 }
