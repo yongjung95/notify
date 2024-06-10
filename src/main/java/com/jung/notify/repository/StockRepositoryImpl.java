@@ -38,9 +38,10 @@ public class StockRepositoryImpl implements StockRepositoryQuerydsl {
                         stockManage.id,
                         stockManage.isUse
                 ))
-                .from(stockManage)
-                .rightJoin(stockManage.stock, stock)
-                .on(stockManage.member.eq(searchMember))
+                .from(stock)
+                .leftJoin(stockManage)
+                .on(stock.id.eq(stockManage.stock.id)
+                        .and(stockManage.member.eq(searchMember)))
                 .where(stock.corpName.contains(corpName))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -67,7 +68,7 @@ public class StockRepositoryImpl implements StockRepositoryQuerydsl {
                 .join(stockManage.member, member)
                 .where(stockManage.isUse.eq(true)
                         .and(stockManage.member.eq(searchMember)
-                ))
+                        ))
                 .fetch();
     }
 
