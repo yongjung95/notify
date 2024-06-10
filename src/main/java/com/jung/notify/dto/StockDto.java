@@ -58,6 +58,7 @@ public class StockDto {
         private String corpName;
         private String stockCode;
         private String lineToken;
+
         @QueryProjection
         public SelectStockManageMember(String corpName, String stockCode, String lineToken) {
             this.corpName = corpName;
