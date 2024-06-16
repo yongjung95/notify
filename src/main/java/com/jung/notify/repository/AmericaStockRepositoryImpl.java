@@ -34,7 +34,7 @@ public class AmericaStockRepositoryImpl implements AmericaStockRepositoryQueryds
     }
 
     @Override
-    public Page<AmericaStockDto.SelectAmericaStock> selectAmericaStockList(String koreanName, Pageable pageable, Member searchMember) {
+    public Page<AmericaStockDto.SelectAmericaStock> selectAmericaStockList(String searchText, Pageable pageable, Member searchMember) {
 
         List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable);
 
@@ -52,7 +52,8 @@ public class AmericaStockRepositoryImpl implements AmericaStockRepositoryQueryds
                 .leftJoin(americaStockManage)
                 .on(americaStock.id.eq(americaStockManage.americaStock.id)
                         .and(americaStockManage.member.eq(searchMember)))
-                .where(americaStock.koreanName.contains(koreanName))
+                .where(americaStock.koreanName.contains(searchText)
+                        .or(americaStock.symbol.contains(searchText)))
                 .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -61,7 +62,8 @@ public class AmericaStockRepositoryImpl implements AmericaStockRepositoryQueryds
         Long stockListCount = queryFactory
                 .select(americaStock.count())
                 .from(americaStock)
-                .where(americaStock.koreanName.contains(koreanName))
+                .where(americaStock.koreanName.contains(searchText)
+                        .or(americaStock.symbol.contains(searchText)))
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, stockListCount);

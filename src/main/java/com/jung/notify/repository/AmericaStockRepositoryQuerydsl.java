@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AmericaStockRepositoryQuerydsl {
 
-    Page<AmericaStockDto.SelectAmericaStock> selectAmericaStockList(String koreanName, Pageable pageable, Member searchMember);
+    Page<AmericaStockDto.SelectAmericaStock> selectAmericaStockList(String searchText, Pageable pageable, Member searchMember);
 
     List<AmericaStockDto.SelectAmericaStockManageMember> selectAmericaStockManageAllByMember(Member member);
 }
