@@ -31,19 +31,19 @@ jobs:
         java-version: 1.8
 
     - name: Make gradlew executable
-      run: chmod +x /home/ubuntu/actions-runner/notify_work/notify/notify/gradlew
+      run: chmod +x /home/ubuntu/notify/actions-runner/notify_work/notify/notify/gradlew
 
     - name: Properties File Copy
-      run: cp /home/ubuntu/notify/application-real.properties /home/ubuntu/actions-runner/notify_work/notify/notify/src/main/resources/application-real.properties
+      run: cp /home/ubuntu/notify/application-real.properties /home/ubuntu/notify/actions-runner/notify_work/notify/notify/src/main/resources/application-real.properties
 
     - name: Build with Gradle
-      run: /home/ubuntu/actions-runner/notify_work/notify/notify/gradlew clean build -x check
+      run: /home/ubuntu/notify/actions-runner/notify_work/notify/notify/gradlew clean build -x check
 
     - name: backup
       run: mv /home/ubuntu/notify/notify-0.0.1-master.jar /home/ubuntu/notify/bak/notify-0.0.1-SNAPSHOT.jar_$(date '+%Y%m%d-%H%M%S')
 
     - name: deploy
-      run: mv /home/ubuntu/actions-runner/notify_work/notify/notify/build/libs/notify-0.0.1-SNAPSHOT.jar /home/ubuntu/notify/notify-0.0.1-master.jar
+      run: mv /home/ubuntu/notify/actions-runner/notify_work/notify/notify/build/libs/notify-0.0.1-SNAPSHOT.jar /home/ubuntu/notify/notify-0.0.1-master.jar
 
     - name: run
       run: cd /home/ubuntu/notify && ./notify.sh
