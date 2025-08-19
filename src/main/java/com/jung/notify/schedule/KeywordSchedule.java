@@ -2,7 +2,6 @@ package com.jung.notify.schedule;
 
 import com.jung.notify.service.KeywordService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,7 +38,7 @@ public class KeywordSchedule {
 //        }
 //    }
 
-    @Scheduled(cron = "0 0 8 1/1 * *", zone = "GMT+9:00")
+//    @Scheduled(cron = "0 0 8 1/1 * *", zone = "GMT+9:00")
     public void keywordScheduleV2(){
         keywordService.sendKeywordList();
     }
